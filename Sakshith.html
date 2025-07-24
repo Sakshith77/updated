@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>SAKSHITH.COM</title>
+  <link rel="icon" href="android-chrome-512x512.png" type="png">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    marquee {
+      font-family: Times New Roman;
+      font-weight: bold;
+    }
+
+    ul {
+      list-style-type: none;
+      background-color: black;
+      color: white;
+      padding: 0;
+      margin: 0;
+    }
+
+    ul li {
+      display: inline-block;
+      padding: 10px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    ul li:hover {
+      background-color: brown;
+      color: aqua;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #333;
+      padding: 10px;
+      z-index: 999;
+    }
+
+    .dropdown ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    .dropdown ul li {
+      display: block;
+      color: white;
+      padding: 5px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <table width="100%">
+    <tr>
+      <td>
+        <!--header-->
+        <table style="background-color: aqua;" border="0" width="100%">
+          <tr>
+            <td><img src="s.png" alt="rg" height="40" width="40" align="right"></td>
+            <td><marquee direction="left" behavior="scroll" scrollamount="7">WELCOME TO MY WEBSITE🙏</marquee></td>
+            <td><img src="s.png" alt="rg" height="40" width="40" align="left"></td>
+          </tr>
+        </table>
+
+        <!-- Navigation -->
+        <ul align="right">
+          <li>Home🏡</li>
+          
+          <li onclick="toggleDropdown(this)">Services⚙️
+            <div class="dropdown">
+              <ul>
+               <li><a href="Songs.html" style="color: white; text-decoration: none;">Songs</a></li>
+        <li><a href="BEEE.html" style="color: white; text-decoration: none;">Ecet</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li>Travel🗺️</li>
+          <li>About Us🤗</li>
+        </ul>
+
+        <!-- Main content -->
+        <table border="0" align="center">
+          <tr>
+            <td>
+             <div style="text-align: center; padding: 50px 20px; background-color: #f0f0f0; font-family: 'Georgia', serif;">
+  <h2 style="font-size: 28px; color: #333; margin-bottom: 20px;">"Every great website starts with one bold idea."</h2>
+  <p style="font-size: 18px; color: #555;">Let your curiosity guide you, and your passion shape the pixels.</p>
+</div>
+
+            </td>
+            <td><img src="Dhoni07.jpg" alt="rg" width="260"></td>
+          </tr>
+        </table>
+
+       <!-- 🌟 Footer Section -->
+<footer style="background-color: #111; color: #ccc; text-align: center; padding: 30px 10px; font-family: Arial, sans-serif;">
+  <h3>Contact Us 📩</h3>
+  <p>Email: <a href="mailto:support@sakshith.com" style="color: aqua;">support@sakshith.com</a></p>
+  <p>Phone: <a href="tel:+919000000000" style="color: aqua;">+91 90000 00000</a></p>
+
+  <div style="margin-top: 20px;">
+    <a href="https://facebook.com" style="margin: 0 10px; color: white;">Facebook</a> |
+    <a href="https://twitter.com" style="margin: 0 10px; color: white;">Twitter</a> |
+    <a href="https://instagram.com" style="margin: 0 10px; color: white;">Instagram</a>
+  </div>
+
+  <hr style="margin: 20px 0; border-color: #444;">
+
+  <p style="font-size: 14px;">© 2025 Sakshith.com | Built with 💙 by Sakshith</p>
+</footer>
+
+
+  <!-- 🧠 JavaScript for dropdown -->
+  <script>
+    function toggleDropdown(elem) {
+      const dropdown = elem.querySelector('.dropdown');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+  </script>
+
+</body>
+</html>

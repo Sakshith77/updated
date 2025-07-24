@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="lightning.png" type="image/png">
+   <title>BEEE</title>
+   <!----css-->
+ <style>
+
+ body{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+ }
+h1{text-align: center;}
+h2{text-align: left;}
+
+  label {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin: 20px;
+      display: block;
+      color: #333;
+    }
+
+    .dropdown-container {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1em;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      color: #333;
+      transition: border-color 0.3s ease;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    select:hover {
+      border-color: #0078D7;
+      background-color: #eef;
+    }
+
+    optgroup {
+      font-weight: bold;
+      color:blue;
+     
+    }
+
+    option {
+      padding: 5px;
+      color:#0078D7;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 40px auto;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+
+    mark {
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+ <div class="dropdown-container">
+  <label for="course">Select Course:</label>
+  <select id="course" name="course" onchange="redirectToCourse(this)">
+    <optgroup label="1st Year">
+      <option value="Songs.html">BEEE</option>
+      <option value="physics.html">PHYSICS</option>
+      <option value="Chemistry.html" target="blank">CHEMISTRY</option> <!-- Link to index.html -->
+      <option value="Songs.html">MATHS</option>
+    </optgroup>
+
+    <optgroup label="2nd Year - 3rd Sem">
+      <option value="de.html">DIGITAL ELECTRONICS</option>
+      <option value="ec.html">ELECTRICAL CIRCUITS</option>
+      <option value="emi.html">ELECTRICAL MEASUREMENTS AND INSTRUMENTS</option>
+      <option value="edc.html">ELECTRICAL DEVICES AND CIRCUITS</option>
+      <option value="Maths2.html">MATHS</option>
+    </optgroup>
+
+    <optgroup label="2nd Year - 4th Sem">
+      <option value="eps.html">ELECTRICAL POWER SYSTEM</option>
+      <option value="acmach.html">AC MACHINES</option>
+      <option value="dcmach.html">DC MACHINES</option>
+      <option value="Maths3.html">MATHS</option>
+    </optgroup>
+  </select>
+</div>
+
+<script>
+  function redirectToCourse(selectElement) {
+    const selectedValue = selectElement.value;
+    if (selectedValue) {
+      window.location.href = selectedValue;
+    }
+  }
+
+  function redirectToCourse(selectElement) {
+    const selectedValue = selectElement.value;
+    if (selectedValue) {
+      window.open(selectedValue, '_blank');
+    }
+  }
+</script>
+
+<h1>👉<mark>Princples of electricity</mark></h1>
+  <table border="1" width="100%" style="color:black;" >
+
+     <tr style="background-color:green;color:white;">
+<th>Topic</th>
+<th>Formula</th>
+<th colspan="2"> Dimensional formulas & S.I units </th>
+<th>Definitions</th>
+</tr>
+<!--current-->
+
+    <tr align="center">
+      <td align="center" style="background-color:orange;"><b>Current(I)</b></td>
+      <td>I=V/R</td>
+	   <td>[M<sup>0</sup>L<sup>0</sup>T<sup>0</sup>A<sup>1</sup>]</td>
+	    <td>Amps(a)</td>
+		 <td>The free flow of electrons is known
+		  as electric current</td>
+    </tr>
+<!--voltage-->
+<tr align="center">
+      <td align="center" style="background-color:Tomato;"><b>Voltage(V)</b></td>
+      <td>V=I*R<br>(or)<br>V=workdone/charge</td>
+	  <td>[M<sup>1</sup>L<sup>2</sup>T<sup>-2</sup>][A.T][M<sup>1</sup>L<sup>2</sup>T<sup>-3</sup>A<sup>-1</sup>]</td>
+	    <td>Volts(v)</td>
+		<td>The ability of a charged body to do work is known as voltage</tr>
+    </tr>
+<!--resistance-->
+<tr align="center">
+      <td align="center" style="background-color:LightSalmon;"><b>Resistance(∩)</b></td>
+      <td>R=V/I</td>
+	  <td>[M<sup>1</sup>L<sup>2</sup>T<sup>-3</sup>A<sup>-1</sup>][A][M<sup>1</sup>L<sup>2</sup>T<sup>-3</sup>A<sup>-2</sup>]</td>
+	    <td>ohms(∩)</td>
+		<td>A substance which resists the flow of current is known as resistance</td>
+    </tr>
+
+<tr align="center">
+      <td align="center" style="background-color:Lightgrey;"><b>Resistivity(९)</b></mark></td>
+      <td>R=९*l/a where ९=Ra/l</td>
+	  <td>[M<sup>1</sup>L<sup>4-1</sup>T<sup>-3</sup>A<sup>-2</sup>][M<sup>1</sup>L<sup>3</sup>T<sup>-3</sup>A<sup>-2</sup>]</td>
+	  <td>ohm-m(∩)</td>
+	    <td>The resistance between opposite faces a unit cube of that material is known as restivity</td>
+    </tr>
+<!--condutace-->
+<tr align="center">
+      <td align="center" style="background-color:Lightgreen;"><b>Condutance(G)</b></mark></td>
+      <td>G=I/V</td>
+	  <td>[M<sup>-1</sup>L<sup>-1</sup>T<sup>3</sup>A<sup>2</sup>]</td>
+	    <td>siemens/meter(s/m)</td>
+		<td>The resiprocal of resistance is known as the condutance</td>
+    </tr>
+<tr align="center">
+      <td align="center" style="background-color:lightpink;"><b>Conductivity(G)</b></mark></td>
+      <td>G=1/R</td>
+	  <td>1/[M<sup>1</sup>L<sup>2</sup>T<sup>-3</sup>A<sup>-2</sup>][M<sup>-1</sup>L<sup>-2</sup>T<sup>3</sup>A<sup>2</sup>]</td>
+	    <td>siemens/meter(s/m)</td>
+		<td>The resiprocal of resistivity is known as the condutivity</td>
+    </tr>
+  </table><br>
+  <!---temperatue-->
+  <h2><mark style="background-color: aqua;">*Temperature topic</mark></h2>
+<table border="1" width="100%">
+  <tr>
+    <th style="background-color: green; color:white;">formula</th> 
+  </tr>
+  <tr>
+    <td align="center">In order to find Temperature co-efficent "&#945"<br>
+     <p border="1" style="color:red"><b> &#945t = &#945o/1+&#945t</b></p> </td>
+  </tr>
+  <tr>
+     <td align="center">In order to find resistance at specific temperature<br>
+       <p border="1" style="color:red"><b> Rt = Ro (1 + &#945o t)</b></p>
+     </td>
+  </tr>
+</table><br>
+ <h2><mark style="background-color: aqua;">*Series parllel connection topic</mark></h2>
+  <!---next line-->
+  <table border="1" width="100%" style="color:black;">
+  <tr style="background-color:green;color:white;">
+  <th> Series Connection</th>
+  <th>parallel Connection</th>
+  </tr>
+  <tr align="center">
+  <td>If one end of resistance is connected with one end of another resistance is known as series connection</td>
+  <td>If one of the each resistance is connected to a comman point and the other end of each resistance is connected to another comman point is known as parallel connection</td>
+  </tr>
+  <tr>
+  <td align="center" style="color:red"><b>R<sub>eq</sub> = R<sub>1</sub> + R<sub>2</sub> + R<sub>3</sub> + R<sub>n</sub></b></td>
+  <td align="center" style="color:red"><b>R<sub>eq</sub> = R<sub>1</sub>*R<sub>2</sub> / R<sub>1</sub> + R<sub>2</sub></b></td>
+  </tr>
+  </table><br>
+
+<h1>👉<mark>Classification of R,I & C </mark> </h1>
+</body>
+</html>
