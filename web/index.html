@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Page</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <form class="login-form" onsubmit="return validateForm()">
+      <h2>Welcome Back</h2>
+      <div class="input-group">
+        <input type="text" id="username" placeholder="Username" required />
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" required />
+      </div>
+      <button type="submit">Login</button>
+      <p class="message">Not registered? <a href="#">Create an account</a></p>
+    </form>
+  </div>
+
+  <script>
+    function validateForm() {
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      // Simple validation (replace with real logic)
+      if (username === "admin" && password === "1234") {
+        window.location.href = "Sakshith.html"; // Redirect after successful login
+        return false; // Prevent form submission
+      } else {
+        alert("Invalid username or password");
+        return false;
+      }
+    }
+  </script>
+</body>
+</html>
