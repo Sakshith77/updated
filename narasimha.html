@@ -3,63 +3,88 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Divine Realm - narashima</title>
+  <title>Divine Realm - Narasimha</title>
+
   <style>
-    /* Ensure video fills background */
+    /* Background video styling */
     #bgVideo {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       object-fit: cover;
       z-index: -1;
     }
 
-    /* Style for bell button */
+    /* Bell button container */
     #shankhButtonContainer {
-      position: absolute;
-      top: 20px;
+      position: fixed;
+      bottom: 20px;
       right: 20px;
       z-index: 10;
     }
 
     #shankhButton {
-      padding: 10px 20px;
-      font-size: 18px;
+      padding: 12px 20px;
+      font-size: 16px;
       background-color: gold;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+      transition: background-color 0.3s ease;
     }
 
     #shankhButton:hover {
       background-color: orange;
     }
-     .open-slideshow {
-      margin: 50px auto;
-      display: block;
-      padding: 15px 30px;
-      font-size: 1.2rem;
+
+    /* Slideshow button */
+    .open-slideshow {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      padding: 12px 20px;
+      font-size: 16px;
       background-color: #4caf50;
       color: white;
       border: none;
       border-radius: 10px;
-      cursor: pointer;
-      text-align: center;
       text-decoration: none;
-        position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      transition: background-color 0.3s ease;
+    }
+
+    .open-slideshow:hover {
+      background-color: #388e3c;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      #shankhButton, .open-slideshow {
+        font-size: 14px;
+        padding: 10px 16px;
+      }
+
+      #shankhButtonContainer {
+        bottom: 15px;
+        right: 15px;
+      }
+
+      .open-slideshow {
+        top: 15px;
+        left: 15px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Button to open slideshow.html -->
+  <!-- Slideshow Button -->
   <a href="narasimha story.html" class="open-slideshow">🦁 View Narasimha's Story</a>
+
   <!-- Background Video -->
   <video id="bgVideo" autoplay muted loop playsinline>
     <source src="lord narashima.mp4" type="video/mp4" />
@@ -89,15 +114,16 @@
     const shankhAudio = document.getElementById("shankhAudio");
     const shankhButton = document.getElementById("shankhButton");
 
-    // Start mantra audio after user interaction
+    // Start mantra audio after first user interaction
     document.body.addEventListener("click", () => {
       finalAudio.play().catch(err => console.log("Autoplay blocked:", err));
     }, { once: true });
 
-    // Play Shankh audio on button click
+    // Play Shankh sound on button click
     shankhButton.addEventListener("click", () => {
       shankhAudio.play();
     });
   </script>
+
 </body>
 </html>
