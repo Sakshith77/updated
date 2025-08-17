@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Divine Realm - narashima</title>
+  <style>
+    /* Ensure video fills background */
+    #bgVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    /* Style for bell button */
+    #shankhButtonContainer {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+    }
+
+    #shankhButton {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: gold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    }
+
+    #shankhButton:hover {
+      background-color: orange;
+    }
+     .open-slideshow {
+      margin: 50px auto;
+      display: block;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+        position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Button to open slideshow.html -->
+  <a href="narasimha story.html" class="open-slideshow">🦁 View Narasimha's Story</a>
+  <!-- Background Video -->
+  <video id="bgVideo" autoplay muted loop playsinline>
+    <source src="lord narashima.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Final Mantra Audio -->
+  <audio id="finalAudio" loop>
+    <source src="Roar Of Narsimha.mp3" type="audio/mp3" />
+    Your browser does not support the audio tag.
+  </audio>
+
+  <!-- Shankh Audio -->
+  <audio id="shankhAudio">
+    <source src="bell.mp3" type="audio/mp3" />
+    Your browser does not support the audio tag.
+  </audio>
+
+  <!-- Bell Button -->
+  <div id="shankhButtonContainer">
+    <button id="shankhButton">🔔 Ring Bell</button>
+  </div>
+
+  <!-- Script -->
+  <script>
+    const finalAudio = document.getElementById("finalAudio");
+    const shankhAudio = document.getElementById("shankhAudio");
+    const shankhButton = document.getElementById("shankhButton");
+
+    // Start mantra audio after user interaction
+    document.body.addEventListener("click", () => {
+      finalAudio.play().catch(err => console.log("Autoplay blocked:", err));
+    }, { once: true });
+
+    // Play Shankh audio on button click
+    shankhButton.addEventListener("click", () => {
+      shankhAudio.play();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Divine Realm</title>
+  <link rel="stylesheet" href="g.css" />
+</head>
+<body>
+
+  <!-- Background Video -->
+  <video id="bgVideo" playsinline>
+    <source src="lord vishnu.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Final Sound Audio -->
+  <audio id="finalAudio">
+    <source src="mantra.mp3" type="audio/mp3" />
+    Your browser does not support the audio tag.
+  </audio>
+
+  <!-- Shankh Audio -->
+  <audio id="shankhAudio">
+    <source src="bell.mp3" type="audio/mp3" />
+    Your browser does not support the audio tag.
+  </audio>
+  
+<!-- Divine Content Placeholder -->
+<div id="divineContent" class="divineContent">
+  <h1>Welcome to the Divine Realm</h1>
+</div>
+
+  <!-- Divine Entry Button -->
+  <div class="entry" id="entry">
+    <button id="divineButton" onclick="startDivineExperience()">🌟 Enter Divine Realm 🌟</button>
+  </div>
+  
+  <!-- Shankh Button -->
+  <div id="shankhButtonContainer">
+    <button id="shankhButton">🔔 ring bell</button>
+  </div>
+
+  <!-- Script -->
+  <script>
+    function startDivineExperience() {
+      const video = document.getElementById("bgVideo");
+      const audio = document.getElementById("finalAudio");
+      const shankhAudio = document.getElementById("shankhAudio");
+      const entry = document.getElementById("entry");
+      const content = document.getElementById("divineContent");
+      const shankhButtonContainer = document.getElementById("shankhButtonContainer");
+      const shankhButton = document.getElementById("shankhButton");
+
+      // Show video and play
+      video.style.display = "block";
+      video.muted = false;
+      video.play();
+
+      // Hide entry button
+      entry.style.display = "none";
+
+      // Show divine content
+      content.classList.add("show");
+
+      // Start petals after 3 seconds
+      setTimeout(() => {
+        for (let i = 0; i < 40; i++) {
+          const petal = document.createElement("img");
+          petal.src = "petals3.png";
+          petal.className = "petal";
+          petal.style.setProperty("--start", Math.random().toFixed(2));
+          petal.style.setProperty("--end", Math.random().toFixed(2));
+          petal.style.left = `${Math.random() * 100}vw`;
+          petal.style.top = `-${Math.random() * 100}px`;
+          document.body.appendChild(petal);
+        }
+      }, 3000);
+
+      // Pause video at 6 seconds and play final sound
+      video.addEventListener("timeupdate", () => {
+        if (video.currentTime >= 6) {
+          video.pause();
+          video.currentTime = 6;
+          audio.play();
+          shankhButtonContainer.style.display = "block";
+        }
+      });
+
+      // Play Shankh audio on button click
+      shankhButton.addEventListener("click", () => {
+        shankhAudio.play();
+      });
+    }
+  </script>
+</body>
+</html>

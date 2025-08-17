@@ -1,0 +1,89 @@
+/* Background Video */
+#bgVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Entry Button */
+.entry {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+/* Divine Button Styling */
+#divineButton {
+  font-size: 1.5rem;
+  padding: 1em 2em;
+  background: gold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  animation: fadeIn 2s ease-in;
+}
+
+/* Shankh Button */
+#shankhButtonContainer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: none;
+  z-index: 10;
+}
+
+#shankhButton {
+  font-size: 1.2rem;
+  padding: 0.8em 1.5em;
+  background: #fff;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Petals Animation */
+.petal {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  animation: fall 5s linear infinite;
+  z-index: 5;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.divineContent {
+  display: none;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 2rem;
+  z-index: 10;
+  text-align: center;
+}
+
+.divineContent.show {
+  display: block;
+}
