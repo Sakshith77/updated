@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Celebration Blast</title>
+    <style>
+        /* Basic Page Styling */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Button styling at the bottom right corner */
+        .container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #FF4500;
+        }
+
+        /* Canvas for Confetti */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Embed Video in Iframe -->
+        <iframe src="Shreya.mp4"  height="200" width="400"></iframe>
+    </div>
+
+    <!-- Button in Bottom Right -->
+    <div class="container">
+        <button id="celebrate-btn">Celebrate!</button>
+    </div>
+    
+    <!-- Canvas for Confetti -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <script>
+        // Canvas Setup
+        const canvas = document.getElementById('confettiCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set Canvas size to full screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Button Event Listener
+        document.getElementById('celebrate-btn').addEventListener('click', startCelebration);
+
+        function startCelebration() {
+            // Trigger the confetti animation for a short period (3 seconds)
+            createConfetti();
+        }
+
+        function createConfetti() {
+            const colors = ['#ff0', '#ff6347', '#ff4500', '#32cd32', '#00bfff', '#ff1493'];
+            const confettiParticles = [];
+
+            // Number of confetti particles
+            const numParticles = 300;
+
+            // Generate confetti particles
+            for (let i = 0; i < numParticles; i++) {
+                confettiParticles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    radius: Math.random() * 6 + 2,
+                    speedX: Math.random() * 6 - 3,
+                    speedY: Math.random() * 6 + 2
+                });
+            }
+
+            // Duration of the celebration (3 seconds)
+            const celebrationDuration = 3000;
+            const startTime = Date.now();
+
+            // Animation function for confetti
+            function animateConfetti() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+                // Draw confetti particles
+                confettiParticles.forEach((particle, index) => {
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2, false);
+                    ctx.fillStyle = particle.color;
+                    ctx.fill();
+
+                    // Update position of confetti
+                    particle.x += particle.speedX;
+                    particle.y += particle.speedY;
+
+                    // Reset particle when it falls out of the screen
+                    if (particle.y > canvas.height) {
+                        confettiParticles[index] = {
+                            x: Math.random() * canvas.width,
+                            y: -10,
+                            color: colors[Math.floor(Math.random() * colors.length)],
+                            radius: Math.random() * 6 + 2,
+                            speedX: Math.random() * 6 - 3,
+                            speedY: Math.random() * 6 + 2
+                        };
+                    }
+                });
+
+                // Stop the animation after the set duration (3 seconds) and clear the canvas
+                if (Date.now() - startTime < celebrationDuration) {
+                    requestAnimationFrame(animateConfetti);
+                } else {
+                    // After the animation ends, clear the canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            animateConfetti(); // Start the animation
+        }
+
+        // Adjust the canvas size on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+
+</body>
+</html>
