@@ -1,40 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Meta Tags -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Page</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <form class="login-form" onsubmit="return validateForm()">
-      <h2>Welcome Back</h2>
-      <div class="input-group">
-        <input type="text" id="username" placeholder="Username" required />
-      </div>
-      <div class="input-group">
-        <input type="password" id="password" placeholder="Password" required />
-      </div>
-      <button type="submit">Login</button>
-      <p class="message">Not registered? <a href="#">Create an account</a></p>
-    </form>
-  </div>
+  <meta name="description" content="Explore music, philosophy, and Indian mythology with Sakshith." />
+  <meta name="keywords" content="Sakshith, music, mythology, philosophy, knowledge hub" />
+  <meta name="author" content="Sakshith" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#1a1a1a" />
 
-  <script>
-    function validateForm() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+  <!-- Open Graph -->
+  <meta property="og:title" content="Sakshith's Knowledge Hub" />
+  <meta property="og:description" content="Weekly updates on music, philosophy, and Indian mythology." />
+  <meta property="og:image" content="https://sakshith77.github.io/web/img\profile.jpg" />
+  <meta property="og:url" content="https://sakshith77.github.io/web" />
+  <meta property="og:type" content="website" />
 
-      // Simple validation (replace with real logic)
-      if (username === "admin" && password === "1234") {
-        window.location.href = "Sakshith.html"; // Redirect after successful login
-        return false; // Prevent form submission
-      } else {
-        alert("Invalid username or password");
-        return false;
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Sakshith's Knowledge Hub" />
+  <meta name="twitter:description" content="Explore music, philosophy, and Indian mythology." />
+  <meta name="twitter:image" content="https://sakshith77.github.io/web/img\profile.jpg" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="img\android-chrome-512x512.png" type="image/png" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+
+  <!-- Typed.js -->
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+
+  <title>SAKSHITH.COM</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #f0f4ff, #e0f7fa);
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .typing-container {
+      font-size: 28px;
+      font-weight: bold;
+      font-family: 'Playfair Display', serif;
+      display: inline-block;
+      border-right: 3px solid white; /* Single pointer */
+      white-space: nowrap;
+      overflow: hidden;
+      animation: blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: white; }
+    }
+
+    nav {
+      background: linear-gradient(to right, #000428, #004e92);
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      padding: 10px 0;
+    }
+
+    nav ul li {
+      padding: 12px 20px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    nav ul li:hover {
+      background-color: #ff9800;
+      color: #fff;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .profile-container {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      object-fit: cover;
+    }
+
+    .main-content {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .main-content h2 {
+      font-size: 32px;
+      font-family: 'Playfair Display', serif;
+      color: #4a148c;
+      margin-bottom: 20px;
+    }
+
+    .main-content p {
+      font-size: 18px;
+      color: #555;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    footer {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #ccc;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    footer a {
+      color: #00e5ff;
+      text-decoration: none;
+      margin: 0 8px;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #ffeb3b;
+    }
+
+    footer hr {
+      border-color: #444;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 600px) {
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      nav ul li {
+        width: 100%;
+        text-align: center;
       }
     }
+  </style>
+</head>
+<body>
+
+  <!-- Header with Typing Animation -->
+  <header>
+    <div class="typing-container">
+      <span id="typed"></span>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav>
+    <ul>
+      <li><a href="BEEE.html">Knowledge 📖</a></li>
+      <li><a href="index.html">Home 🏡</a></li>
+      <li><a href="Songs.html">Music 🎶</a></li>
+      <li><a href="Start.html">Mythology 📜</a></li>
+      <li><a href="Philosophy of music.html">Philosophy of music 🎵</a></li>
+      <li><a href="#">Gallery 🖼️</a></li>
+      <li><a href="My-first-sites.html">My-first-sites 📩</a></li>
+    </ul>
+  </nav>
+
+  <!-- Profile Photo -->
+  <div class="profile-container">
+    <img src="img\profile.jpg" alt="Sakshith Profile" class="profile-pic">
+  </div>
+
+  <!-- Main Content -->
+  <section class="main-content">
+    <h2>"Every great website starts with one bold idea."</h2>
+    <p>Let your curiosity guide you, and your passion shape the pixels.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <h3>Contact Us 📩</h3>
+    <p>Email: <a href="mailto:support@sakshith.com">support@sakshith.com</a></p>
+    <p>Phone: <a href="tel:+919000000000">+91 90000 00000</a></p>
+
+    <div style="margin-top: 20px;">
+      <a href="https://facebook.com">Facebook</a> |
+      <a href="https://twitter.com">Twitter</a> |
+      <a href="https://instagram.com">Instagram</a>
+    </div>
+
+    <hr>
+    <p style="font-size: 14px;">© 2025 Sakshith.com | Built with 💙 by Sakshith</p>
+  </footer>
+
+  <!-- Typed.js Script -->
+  <script>
+    var typed = new Typed("#typed", {
+      strings: ["Sakshith's Knowledge Hub", "Explore Music & Mythology", "Curated Weekly Wisdom"],
+      typeSpeed: 60,
+      backSpeed: 30,
+      loop: true
+    });
   </script>
 </body>
 </html>
