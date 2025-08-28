@@ -7,7 +7,37 @@
    <title>BEEE</title>
    <!----css-->
  <style>
-
+details{margin:10px;}
+.box {
+      display: inline-block;
+      padding: auto;
+      margin: 20px;
+      border: 2px solid #333;
+      border-radius: 10px;
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+    .h1box{padding: 10px;
+      margin: 20px;
+      border: 2px solid #333;
+      border-radius: 25px;
+      background-color: #f0f0f0;
+      font-weight: bold;}
+    .arrow {
+      font-size: 30px;
+      margin: 10px;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .row {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+    }
  body{
   margin: 0;
   padding: 0;
@@ -76,8 +106,12 @@ h2{text-align: left;}
 
     mark {
       padding: 2px 6px;
-      border-radius: 4px;
+      border-radius: 5px;
+      background-color: rgb(3, 149, 246);
+      color:white;
     }
+    .hmark{background-color:yellow;
+    color: brown;}
   </style>
 </head>
 
@@ -125,7 +159,7 @@ h2{text-align: left;}
   }
 </script>
 
-<h1>👉<mark>Princples of electricity</mark></h1>
+<h1>👉<mark class="hmark">Princples of electricity</mark></h1>
   <table border="1" width="100%" style="color:black;" >
 
      <tr style="background-color:green;color:white;">
@@ -185,7 +219,7 @@ h2{text-align: left;}
     </tr>
   </table><br>
   <!---temperatue-->
-  <h2><mark style="background-color: aqua;">*Temperature topic</mark></h2>
+  <h2>=><mark>Temperature topic</mark></h2>
 <table border="1" width="100%">
   <tr>
     <th style="background-color: green; color:white;">formula</th> 
@@ -200,7 +234,7 @@ h2{text-align: left;}
      </td>
   </tr>
 </table><br>
- <h2><mark style="background-color: aqua;">*Series parllel connection topic</mark></h2>
+ <h2>=><mark>Series parllel connection topic</mark></h2>
   <!---next line-->
   <table border="1" width="100%" style="color:black;">
   <tr style="background-color:green;color:white;">
@@ -215,10 +249,47 @@ h2{text-align: left;}
   <td align="center" style="color:red"><b>R<sub>eq</sub> = R<sub>1</sub> + R<sub>2</sub> + R<sub>3</sub> + R<sub>n</sub></b></td>
   <td align="center" style="color:red"><b>R<sub>eq</sub> = R<sub>1</sub>*R<sub>2</sub> / R<sub>1</sub> + R<sub>2</sub></b></td>
   </tr>
-  </table><br>
-<h1>👉<mark>Classification of R,L & C </mark> </h1>
- <img align="center" src="img\conductor.png" alt="A conductor image" width="300">
-
+  </table><hr style="border: none; height: 5px; background-color: #333;"><br>
+ <div class="container"> 
+   <div class="h1box"><h1>👉<mark class="hmark">Classification of R,L & C </mark><br><code>(Resistance, inductance, Capacitance)</code> </h1></div>
+    <div class="arrow">↡</div>
+    <div class="row">
+      <div class="box"><details>
+    <summary><b>Are Linear elements</b></summary>
+    <P><em>Which obyes superposition,nortons and thinvens theromies and follows ohm's law<br> <a href="https://www.bbc.co.uk/bitesize/guides/zt9xy4j/revision/2" target="_blank">Graphs</a></em> </P>
+</details></div>
+      <div class="box"><details>
+    <summary><b>Directly and inversely propotional</b></summary>
+    <P><em>V &#945 I in ohm's law<br>V &#945 1/I in power concept</em></P>
+</details></div>
+    </div>
+</div>
+<h2 style="text-decoration: underline; margin-left: 50px; color: cadetblue;">OHM'S LAW</h2> <img src="img/conductor.png" height="176px" width="280px">
+<div style="margin-right: 37%; color: magenta;"><h1>(1<sup>st</sup> Form of ohm's law)</h1></div>
+<big><mark style="background-color: rgb(122, 55, 0); color: white;!important">J &#945 E</mark></big> <b><big>{</big> because J=&#915.E <big>}</big></b> 
+<p style="margin: 10px;"> Where,</p>
+<p style="padding-left: 35px;">J=Current density.<br>&#915=Conductivity.<br>E=Electic field.</p>
+<div style="margin-right: 37%; color: magenta;"><h1>(2<sup>nd</sup> Form of ohm's law)</h1></div>
+<div style="color: #d75a00; margin: 0%;"><big>[</big>At a constant temperature<big>]</big></div>
+<big><mark style="background-color: rgb(122, 55, 0); color: white;!important">I &#945 V</mark></big> <b><big>{</big> because V = I.R <big>}</big></b>
+ (Means when we increase voltage across resistance<br> <div style="margin-left: 16%;">The current flowing through it increases)</div> 
+<div style="color: #d75a00; margin: 0%;"><big>[</big>Ohm's law in ckt therom<big>]</big></div>
+<big><mark style="background-color: rgb(122, 55, 0); color: white;!important">V &#945 I</mark></big>
+<h2 style="text-decoration: underline; margin-left: 50px; color: cadetblue;">Inductor(L)</h2>
+<div style="margin-right: 37%; color: magenta;"><h1>(3<sup>rd</sup> Form of ohm's law)</h1></div>
+<big><mark style="background-color: rgb(122, 55, 0); color: white;!important">V.L &#945 dI/dt</mark></big> <b><big>{</big> because V = L.dI/dt <big>}</big></b>
+<div style="margin-right: 37%; color: magenta;"><h1>(4<sup>th</sup> Form of ohm's law)</h1></div>
+<big><mark style="background-color: rgb(122, 55, 0); color: white;!important">∫ V/L = ∫ dI/d</mark></big> <b><big>{</big> because I = 1/L∫<sup>t</sup><sub>∞</sub>V.dt <big>}</big></b>
+<h2 style="text-decoration: underline; margin-left: 50px; color: cadetblue;">Capacitor(c)</h2>
+<div style="margin-right: 37%; color: magenta;"><h1>(5<sup>th</sup> Form of ohm's law)</h1></div>
+<big><mark style="background-color: rgb(122, 55, 0); color: white;!important">I.C &#945 ∫dV/dt</mark></big> <b><big>{</big> because I = C.dV/dt <big>}</big></b>
+<div style="margin-right: 37%; color: magenta;"><h1>(6<sup>th</sup> Form of ohm's law)</h1></div>
+<big><mark style="background-color: rgb(122, 55, 0); color: white;!important">∫ I/C = ∫ dv/dt</mark></big> <b><big>{</big> because v = 1/C∫<sup>t</sup><sub>∞</sub>i.dt <big>}</big></b>
+<br><br>
+<h1 style="color: rgb(155, 109, 50);text-decoration: underline;">Limitations of ohm's law</h1>
+<ul style="font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;font-weight: bold;"><li>Ohm's law can only applicable for metals</li>
+<li>ohm's law obeys for a constant temparature and for a constant physical conditions like pressure, strain, length, and cross-sectional area of a conductor</li>
+<li>ohm's law not applicable for semiconductors, Vaccum & discharge tubes, Electrolysis and arc lamps </li></ul>
 </body>
 </html>
 
