@@ -32,141 +32,13 @@
   <!-- Typed.js -->
   <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
 
+  <link rel="stylesheet" href="style.css" />
   <title>SAKSHITH.COM</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #f0f4ff, #e0f7fa);
-      color: #333;
-    }
-
-    header {
-      background: linear-gradient(to right, #6a11cb, #2575fc);
-      color: white;
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    .typing-container {
-      font-size: 28px;
-      font-weight: bold;
-      font-family: 'Playfair Display', serif;
-      display: inline-block;
-      border-right: 3px solid white; /* Single pointer */
-      white-space: nowrap;
-      overflow: hidden;
-      animation: blink-caret 0.75s step-end infinite;
-    }
-
-    @keyframes blink-caret {
-      from, to { border-color: transparent; }
-      50% { border-color: white; }
-    }
-
-    nav {
-      background: linear-gradient(to right, #000428, #004e92);
-    }
-
-    nav ul {
-      display: flex;
-      justify-content: center;
-      list-style: none;
-      padding: 10px 0;
-    }
-
-    nav ul li {
-      padding: 12px 20px;
-      color: white;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    nav ul li:hover {
-      background-color: #ff9800;
-      color: #fff;
-    }
-
-    nav ul li a {
-      color: white;
-      text-decoration: none;
-    }
-
-    .profile-container {
-      text-align: center;
-      margin: 30px 0;
-    }
-
-    .profile-pic {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      object-fit: cover;
-    }
-
-    .main-content {
-      text-align: center;
-      padding: 60px 20px;
-    }
-
-    .main-content h2 {
-      font-size: 32px;
-      font-family: 'Playfair Display', serif;
-      color: #4a148c;
-      margin-bottom: 20px;
-    }
-
-    .main-content p {
-      font-size: 18px;
-      color: #555;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    footer {
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #ccc;
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    footer a {
-      color: #00e5ff;
-      text-decoration: none;
-      margin: 0 8px;
-      transition: color 0.3s;
-    }
-
-    footer a:hover {
-      color: #ffeb3b;
-    }
-
-    footer hr {
-      border-color: #444;
-      margin: 20px 0;
-    }
-
-    @media (max-width: 600px) {
-      nav ul {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      nav ul li {
-        width: 100%;
-        text-align: center;
-      }
-    }
-  </style>
 </head>
 <body>
+<!-- Better -->
+<script src="script.js" defer></script>
 
   <!-- Header with Typing Animation -->
   <header>
@@ -187,10 +59,12 @@
       <li><a href="My-first-sites.html">My-first-sites 📩</a></li>
     </ul>
   </nav>
+<div id="cursor"></div>
+
 
   <!-- Profile Photo -->
   <div class="profile-container">
-    <img src="img\profile.jpg" alt="Sakshith Profile" class="profile-pic">
+    <img src="img/profile.jpg" alt="Sakshith Profile" class="profile-pic">
   </div>
 
   <!-- Main Content -->

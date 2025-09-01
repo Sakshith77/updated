@@ -1,75 +1,168 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
+/* Hide default cursor */
+body{
+  cursor: none !important;
 }
 
-body {
-  height: 100vh;
-  background: linear-gradient(135deg, #74ebd5, #9face6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.container {
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 15px;
-  padding: 40px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-  width: 300px;
-}
-
-.login-form h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #fff;
-}
-
-.input-group {
-  margin-bottom: 15px;
-}
-
-.input-group input {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.3);
-  color: #fff;
-  font-size: 16px;
-}
-
-input::placeholder {
-  color: #eee;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 8px;
-  background-color: #6a11cb;
-  background-image: linear-gradient(to right, #2575fc, #6a11cb);
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
+a:hover,
 button:hover {
-  opacity: 0.9;
+  cursor: none !important;
 }
 
-.message {
-  text-align: center;
-  margin-top: 15px;
-  color: #fff;
+/* Hide default cursor globally */
+* {
+  cursor: none !important;
 }
 
-.message a {
-  color: #fff;
-  text-decoration: underline;
+* {
+  cursor: none !important;
 }
+
+#cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  background: url('cursor.png') no-repeat center center;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease, filter 0.3s ease;
+}
+
+
+
+
+
+
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #f0f4ff, #e0f7fa);
+      color: #333;
+      
+    }
+
+    header {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .typing-container {
+      font-size: 28px;
+      font-weight: bold;
+      font-family: 'Playfair Display', serif;
+      display: inline-block;
+      border-right: 3px solid white; /* Single pointer */
+      white-space: nowrap;
+      overflow: hidden;
+      animation: blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: white; }
+    }
+
+    nav {
+      background: linear-gradient(to right, #000428, #004e92);
+    }
+
+    nav ul {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      padding: 10px 0;
+    }
+
+    nav ul li {
+      padding: 12px 20px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    nav ul li:hover {
+      background-color: #ff9800;
+      color: #fff;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .profile-container {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      object-fit: cover;
+    }
+
+    .main-content {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .main-content h2 {
+      font-size: 32px;
+      font-family: 'Playfair Display', serif;
+      color: #4a148c;
+      margin-bottom: 20px;
+    }
+
+    .main-content p {
+      font-size: 18px;
+      color: #555;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    footer {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #ccc;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    footer a {
+      color: #00e5ff;
+      text-decoration: none;
+      margin: 0 8px;
+      transition: color 0.3s;
+    }
+
+    footer a:hover {
+      color: #ffeb3b;
+    }
+
+    footer hr {
+      border-color: #444;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 600px) {
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      nav ul li {
+        width: 100%;
+        text-align: center;
+      }
+    }

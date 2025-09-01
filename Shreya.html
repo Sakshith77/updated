@@ -1,161 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>❤️Shreya's-melody</title>
-    <style>
-        /* Basic Page Styling */
-        body{ margin: 0; 
-    background-image: url('img/shreya.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed; /* Keeps the image fixed during scroll */
-    background-position: center center; /* Centers the image */
-    text-align: center;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>❤️ Shreya's Melody</title>
+  <style>
+    /* Reset and base styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        /* Button styling at the bottom right corner */
-        .container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 10;
-        }
-        .iframe {
-            position: fixed;
-            bottom: 70%;
-            right: 40%;
-            left: 25%;
-            top: 35%;
-            z-index: 10;
-        }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-image: url('img/shreya.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      text-align: center;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-        button {
-            padding: 15px 30px;
-            font-size: 18px;
-            background-color: #FF6347;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+    /* Confetti Canvas */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1000;
+    }
 
-        button:hover {
-            background-color: #FF4500;
-        }
+    /* Button Containers */
+    .container-left,
+    .container-right {
+      position: fixed;
+      bottom: 20px;
+      z-index: 10;
+    }
 
-        /* Canvas for Confetti */
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 1000;
-        }
-    </style>
+    .container-left {
+      left: 20px;
+    }
+
+    .container-right {
+      right: 20px;
+    }
+
+    /* Buttons */
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #FF6347;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+
+    button:hover {
+      background-color: skyblue;
+      transform: scale(1.05);
+    }
+
+    .next-btn {
+      background-color: #4CAF50;
+    }
+
+    .next-btn:hover {
+      background-color: #c01369;
+    }
+
+    /* First Layer Video */
+    .video-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 800px;
+      aspect-ratio: 16 / 9;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px pink;
+      z-index: 5;
+    }
+
+    .video-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Second Layer */
+    #second-layer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('img/lovebg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      z-index: 999;
+      color: white;
+      text-align: center;
+      padding-top: 100px;
+    }
+
+    #second-layer.show {
+      display: block;
+      opacity: 1;
+    }
+
+    .second-content {
+      width: 90%;
+      max-width: 800px;
+      margin: auto;
+      aspect-ratio: 16 / 9;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    }
+
+    .second-content video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 20px;
+    }
+
+    #second-layer button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #FF69B4;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #second-layer button:hover {
+      background-color: #ff1493;
+    }
+
+    .back-btn {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: #FF69B4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1001;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.back-btn:hover {
+  background-color: #ff1493;
+  transform: scale(1.05);
+}
+
+  iframe { position: fixed; bottom: 70%; right: 40%; left: 25%; top: 35%; z-index: 10; }
+
+  </style>
 </head>
 <body>
 
-    <!-- Embed Video in Iframe -->
-        <iframe class="iframe" src="video\Shreya.mp4"  height="250" width="250"></iframe>
-    </div>
+  <!-- Confetti Canvas -->
+  <canvas id="confettiCanvas"></canvas>
 
-    <!-- Button in Bottom Right -->
-    <div class="container">
-        <button id="celebrate-btn">Celebrate!</button>
-    </div>
-    
-    <!-- Canvas for Confetti -->
-    <canvas id="confettiCanvas"></canvas>
+  <!-- First Layer Video -->
 
-    <script>
-        // Canvas Setup
-        const canvas = document.getElementById('confettiCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Set Canvas size to full screen
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    <iframe src="video/Shreya.mp4" height="250" width="250" allow="autoplay"></iframe>
 
-        // Button Event Listener
-        document.getElementById('celebrate-btn').addEventListener('click', startCelebration);
+  <!-- Celebrate Button -->
+  <div class="container-left">
+    <button id="celebrate-btn">Celebrate!</button>
+  </div>
 
-        function startCelebration() {
-            // Trigger the confetti animation for a short period (3 seconds)
-            createConfetti();
-        }
+  <!-- Door to Strawberry Button -->
+  <div class="container-right">
+    <button class="next-btn" onclick="openLayer()">Door to Concert→</button>
+  </div>
 
-        function createConfetti() {
-            const colors = ['#ff0', '#ff6347', '#ff4500', '#32cd32', '#00bfff', '#ff1493'];
-            const confettiParticles = [];
+<div id="second-layer">
+  <div class="second-content">
+    <video controls autoplay>
+      <source src="video/Sherya's-magic.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  <button class="back-btn" onclick="closeLayer()">← Back</button>
+</div>
 
-            // Number of confetti particles
-            const numParticles = 300;
+  <!-- JavaScript -->
+  <script>
+    // Confetti Setup
+    const canvas = document.getElementById('confettiCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-            // Generate confetti particles
-            for (let i = 0; i < numParticles; i++) {
-                confettiParticles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    radius: Math.random() * 6 + 2,
-                    speedX: Math.random() * 6 - 3,
-                    speedY: Math.random() * 6 + 2
-                });
-            }
+    document.getElementById('celebrate-btn').addEventListener('click', startCelebration);
 
-            // Duration of the celebration (3 seconds)
-            const celebrationDuration = 3000;
-            const startTime = Date.now();
+    function startCelebration() {
+      const colors = ['#ff0', '#ff6347', '#ff4500', '#32cd32', '#00bfff', '#ff1493'];
+      const confettiParticles = [];
+      const numParticles = 300;
 
-            // Animation function for confetti
-            function animateConfetti() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-
-                // Draw confetti particles
-                confettiParticles.forEach((particle, index) => {
-                    ctx.beginPath();
-                    ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2, false);
-                    ctx.fillStyle = particle.color;
-                    ctx.fill();
-
-                    // Update position of confetti
-                    particle.x += particle.speedX;
-                    particle.y += particle.speedY;
-
-                    // Reset particle when it falls out of the screen
-                    if (particle.y > canvas.height) {
-                        confettiParticles[index] = {
-                            x: Math.random() * canvas.width,
-                            y: -10,
-                            color: colors[Math.floor(Math.random() * colors.length)],
-                            radius: Math.random() * 6 + 2,
-                            speedX: Math.random() * 6 - 3,
-                            speedY: Math.random() * 6 + 2
-                        };
-                    }
-                });
-
-                // Stop the animation after the set duration (3 seconds) and clear the canvas
-                if (Date.now() - startTime < celebrationDuration) {
-                    requestAnimationFrame(animateConfetti);
-                } else {
-                    // After the animation ends, clear the canvas
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                }
-            }
-
-            animateConfetti(); // Start the animation
-        }
-
-        // Adjust the canvas size on window resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+      for (let i = 0; i < numParticles; i++) {
+        confettiParticles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          radius: Math.random() * 6 + 2,
+          speedX: Math.random() * 6 - 3,
+          speedY: Math.random() * 6 + 2
         });
-    </script>
+      }
 
+      const celebrationDuration = 3000;
+      const startTime = Date.now();
+
+      function animateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        confettiParticles.forEach((p, i) => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+          p.x += p.speedX;
+          p.y += p.speedY;
+          if (p.y > canvas.height) {
+            confettiParticles[i] = {
+              x: Math.random() * canvas.width,
+              y: -10,
+              color: colors[Math.floor(Math.random() * colors.length)],
+              radius: Math.random() * 6 + 2,
+              speedX: Math.random() * 6 - 3,
+              speedY: Math.random() * 6 + 2
+            };
+          }
+        });
+
+        if (Date.now() - startTime < celebrationDuration) {
+          requestAnimationFrame(animateConfetti);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+
+      animateConfetti();
+    }
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Layer Toggle
+    function openLayer() {
+      const layer = document.getElementById('second-layer');
+      layer.style.display = 'block';
+      setTimeout(() => layer.classList.add('show'), 10);
+    }
+
+    function closeLayer() {
+      const layer = document.getElementById('second-layer');
+      layer.classList.remove('show');
+      setTimeout(() => layer.style.display = 'none', 500);
+    }
+  </script>
 </body>
 </html>
