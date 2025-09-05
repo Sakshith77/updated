@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Childhood Art Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      display: none;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .toggle-dark {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #333;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .thumbnail {
+      cursor: pointer;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .thumbnail:hover {
+      transform: scale(1.03);
+    }
+
+    .thumbnail img {
+      width: 100%;
+      display: block;
+    }
+
+    .viewer {
+      display: none;
+      width: 90%;
+      max-width: 900px;
+      height: 90vh;
+      margin: 2rem auto;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: opacity 0.5s ease;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .note {
+      text-align: center;
+      font-size: 1rem;
+      margin-top: 1rem;
+      color: #666;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      font-size: 0.9rem;
+      color: #999;
+    }
+
+    body.dark {
+      background-color: #1a1a1a;
+      color: #eee;
+    }
+
+    body.dark .note {
+      color: #ccc;
+    }
+
+    body.dark .toggle-dark {
+      background-color: #eee;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <button class="toggle-dark" onclick="toggleDark()">Dark Mode</button>
+
+  <header>
+    <h1>Childhood Art Gallery</h1>
+    <p>Click a drawing to view it in full</p>
+  </header>
+
+  <div class="gallery">
+    <div class="thumbnail" onclick="showPDF('Doc/Freefire.pdf', 'Inspired by my favorite game.')">
+      <img src="Doc/thumb_freefire.jpg" alt="Freefire Drawing">
+    </div>
+    <div class="thumbnail" onclick="showPDF('Doc/humanbeing.pdf', 'Sketched while listening to music.')">
+      <img src="Doc/thumb_humanbeing.jpg" alt="Human Drawing">
+    </div>
+  </div>
+
+  <div class="viewer" id="pdfViewerContainer">
+    <iframe id="pdfViewer" src=""></iframe>
+  </div>
+  <div class="note" id="drawingNote"></div>
+
+  <footer>
+    &copy; 2025. Sakshith All rights reserved.
+  </footer>
+
+  <script>
+    const password = "sakshith123";
+
+    window.onload = function () {
+      const userInput = prompt("Enter password to access the gallery:");
+      if (userInput === password) {
+        document.body.style.display = "block";
+      } else {
+        document.body.innerHTML = "<h2 style='text-align:center; margin-top:20vh;'>Access Denied</h2>";
+      }
+    };
+
+    function showPDF(file, note) {
+      const viewer = document.getElementById('pdfViewer');
+      const container = document.getElementById('pdfViewerContainer');
+      const drawingNote = document.getElementById('drawingNote');
+
+      viewer.src = file;
+      drawingNote.textContent = note;
+      container.style.display = 'block';
+      container.style.opacity = '1';
+    }
+
+    function toggleDark() {
+      document.body.classList.toggle('dark');
+    }
+  </script>
+</body>
+</html>

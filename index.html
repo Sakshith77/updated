@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Meta Tags -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Explore music, philosophy, and Indian mythology with Sakshith." />
@@ -10,37 +9,26 @@
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#1a1a1a" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Sakshith's Knowledge Hub" />
-  <meta property="og:description" content="Weekly updates on music, philosophy, and Indian mythology." />
-  <meta property="og:image" content="https://sakshith77.github.io/web/img\profile.jpg" />
-  <meta property="og:url" content="https://sakshith77.github.io/web" />
-  <meta property="og:type" content="website" />
-
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Sakshith's Knowledge Hub" />
-  <meta name="twitter:description" content="Explore music, philosophy, and Indian mythology." />
-  <meta name="twitter:image" content="https://sakshith77.github.io/web/img\profile.jpg" />
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Open+Sans:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
 
   <!-- Favicon -->
-  <link rel="icon" href="img\android-chrome-512x512.png" type="image/png" />
+  <link rel="icon" href="img/android-chrome-512x512.png" type="image/png" />
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
-
-  <!-- Typed.js -->
-  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-
+  <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
   <title>SAKSHITH.COM</title>
-
 </head>
 <body>
-<!-- Better -->
-<script src="script.js" defer></script>
 
-  <!-- Header with Typing Animation -->
+  <!-- Dark Mode Toggle -->
+  <button id="darkToggle">🌙</button>
+
+  <!-- Custom Cursor -->
+  <div id="cursor"></div>
+
+  <!-- Header -->
   <header>
     <div class="typing-container">
       <span id="typed"></span>
@@ -48,55 +36,52 @@
   </header>
 
   <!-- Navigation -->
-  <nav>
+  <nav role="navigation" aria-label="Main menu">
     <ul>
-      <li><a href="BEEE.html ">Knowledge 📖</a></li>
+      <li><a href="BEEE.html">Knowledge 📖</a></li>
       <li><a href="index.html">Home 🏡</a></li>
       <li><a href="Songs.html">Music 🎶</a></li>
       <li><a href="Start.html">Mythology 📜</a></li>
-      <li><a href="Philosophy of music.html">Philosophy of music 🎵</a></li>
-      <li><a href="#">Gallery 🖼️</a></li>
-      <li><a href="My-first-sites.html">My-first-sites 📩</a></li>
+      <li><a href="Philosophy of music.html">Philosophy 🎵</a></li>
+      <li><a href="Gallery.html">Gallery 🖼️</a></li>
+      <li><a href="My-first-sites.html">My Sites 📩</a></li>
     </ul>
   </nav>
-<div id="cursor"></div>
 
+  <!-- Parallax Hero Section -->
+  <section class="hero">
+    <h1>Welcome to Sakshith.com</h1>
+    <p>Where music meets mythology and philosophy.</p>
+  </section>
 
-  <!-- Profile Photo -->
-  <div class="profile-container">
-    <img src="img/profile.jpg" alt="Sakshith Profile" class="profile-pic">
+  <!-- Profile -->
+  <div class="profile-container" data-aos="zoom-in">
+    <img src="img/profile.jpg" alt="Sakshith Profile" class="profile-pic" loading="lazy">
   </div>
 
   <!-- Main Content -->
-  <section class="main-content">
+  <section class="main-content" data-aos="fade-up">
     <h2>"Every great website starts with one bold idea."</h2>
-    <p>Let your curiosity guide you, and your passion shape the pixels.</p>
+    <p id="quoteBox">Loading wisdom...</p>
   </section>
 
   <!-- Footer -->
-  <footer>
+  <footer data-aos="fade-up">
     <h3>Contact Us 📩</h3>
     <p>Email: <a href="mailto:support@sakshith.com">support@sakshith.com</a></p>
     <p>Phone: <a href="tel:+919000000000">+91 90000 00000</a></p>
-
-    <div style="margin-top: 20px;">
+    <div>
       <a href="https://facebook.com">Facebook</a> |
       <a href="https://twitter.com">Twitter</a> |
       <a href="https://instagram.com">Instagram</a>
     </div>
-
     <hr>
-    <p style="font-size: 14px;">© 2025 Sakshith.com | Built with 💙 by Sakshith</p>
+    <p>© 2025 Sakshith.com | Built with 💙 by Sakshith</p>
   </footer>
 
-  <!-- Typed.js Script -->
-  <script>
-    var typed = new Typed("#typed", {
-      strings: ["Sakshith's Knowledge Hub", "Explore Music & Mythology", "Curated Weekly Wisdom"],
-      typeSpeed: 50,
-      backSpeed: 30,
-      loop: true
-    });
-  </script>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
