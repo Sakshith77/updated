@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Divine Realm - Varaha</title>
+
+  <style>
+    /* Background video styling */
+    #bgVideo {
+      width: 100%; /* Make sure it stretches to full width */
+      height: 100%; /* Viewport height for mobile and desktop */
+      z-index: -1;
+      object-fit: cover;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Bell button container */
+    #shankhButtonContainer {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10;
+    }
+
+    #shankhButton {
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: gold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+      transition: background-color 0.3s ease;
+    }
+
+    #shankhButton:hover {
+      background-color: orange;
+    }
+
+    /* Slideshow button */
+    .open-slideshow {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      transition: background-color 0.3s ease;
+    }
+
+    .open-slideshow:hover {
+      background-color: #388e3c;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      #shankhButton, .open-slideshow {
+        font-size: 14px;
+        padding: 10px 16px;
+      }
+
+      #shankhButtonContainer {
+        bottom: 15px;
+        right: 15px;
+      }
+
+      .open-slideshow {
+        top: 15px;
+        left: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Slideshow Button -->
+  <a href="Varaha-story.html" class="open-slideshow">🐗 View Varaha Story</a>
+
+  <!-- Background Video -->
+  <video id="bgVideo" autoplay muted loop playsinline>
+    <source src="video/Varaha.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Final Mantra Audio -->
+  <audio id="finalAudio" loop>
+    <source src="audio/Varaha.mp3" type="audio/mp3" />
+    Your browser does not support the audio tag.
+  </audio>
+
+  <!-- Shankh Audio -->
+  <audio id="shankhAudio">
+    <source src="audio\bell.mp3" type="audio/mp3" />
+    Your browser does not support the audio tag.
+  </audio>
+
+  <!-- Bell Button -->
+  <div id="shankhButtonContainer">
+    <button id="shankhButton">🔔 Ring Bell</button>
+  </div>
+
+  <!-- Script -->
+  <script>
+    const finalAudio = document.getElementById("finalAudio");
+    const shankhAudio = document.getElementById("shankhAudio");
+    const shankhButton = document.getElementById("shankhButton");
+
+    // Start mantra audio after first user interaction
+    document.body.addEventListener("click", () => {
+      finalAudio.play().catch(err => console.log("Autoplay blocked:", err));
+    }, { once: true });
+
+    // Play Shankh sound on button click
+    shankhButton.addEventListener("click", () => {
+      shankhAudio.play();
+    });
+  </script>
+
+</body>
+</html>
