@@ -92,3 +92,34 @@ setTimeout(() => {
 setTimeout(() => {
   AOS.init();
 }, 300);
+
+
+
+
+
+
+
+
+
+
+
+const cacheName = 'v1';
+const cachedFiles = [
+  '/',
+  '/index.html',
+  '/style.css',
+  '/script.js',
+  '/images/logo.png'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(cacheName).then(cache => cache.addAll(cachedFiles))
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => response || fetch(event.request))
+  );
+});
