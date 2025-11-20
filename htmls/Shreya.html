@@ -127,7 +127,7 @@
       aspect-ratio: 16 / 9;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 0 30px rgba(4, 105, 67, 0.6);
     }
 
     .second-content video {
@@ -199,7 +199,7 @@
 
 <div id="second-layer">
   <div class="second-content">
-    <video controls autoplay>
+    <video controls>
       <source src="video/Sherya's-magic.mp4" type="video/mp4" />
       Your browser does not support the video tag.
     </video>
@@ -218,7 +218,7 @@
     document.getElementById('celebrate-btn').addEventListener('click', startCelebration);
 
     function startCelebration() {
-      const colors = ['#ff0', '#ff6347', '#ff4500', '#32cd32', '#00bfff', '#ff1493'];
+      const colors = ['#ff0', '#ff6347', '#ff4500', '#32cd32', '#00bfff', '#ff1493', '#ff4400'];
       const confettiParticles = [];
       const numParticles = 300;
 
@@ -233,7 +233,7 @@
         });
       }
 
-      const celebrationDuration = 3000;
+      const celebrationDuration = 4000;
       const startTime = Date.now();
 
       function animateConfetti() {

@@ -3,15 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Divine Realm - Varaha</title>
+  <title>Divine Realm - Narasimha</title>
 
   <style>
     /* Background video styling */
     #bgVideo {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%; /* Make sure it stretches to full width */
-      height: 100%; /* Viewport height for mobile and desktop */
+      height: 100vh; /* Viewport height for mobile and desktop */
+      object-fit: cover; /* Ensures the video covers the screen */
       z-index: -1;
-      object-fit: cover;
     }
 
     html, body {
@@ -87,17 +90,17 @@
 <body>
 
   <!-- Slideshow Button -->
-  <a href="Varaha-story.html" class="open-slideshow">🐗 View Varaha Story</a>
+  <a href="htmls/narasimha story.html" class="open-slideshow">🦁 View Narasimha's Story</a>
 
   <!-- Background Video -->
   <video id="bgVideo" autoplay muted loop playsinline>
-    <source src="video/Varaha.mp4" type="video/mp4" />
+    <source src="video\lord narashima.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 
   <!-- Final Mantra Audio -->
   <audio id="finalAudio" loop>
-    <source src="audio/Varaha.mp3" type="audio/mp3" />
+    <source src="audio\Roar Of Narsimha.mp3" type="audio/mp3" />
     Your browser does not support the audio tag.
   </audio>
 
