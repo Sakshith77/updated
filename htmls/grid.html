@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Black & White Grid Drawing Tool</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f0f0;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #333;
+      display: block;
+      margin-top: 10px;
+      background: #fff;
+    }
+    .controls {
+      margin-bottom: 10px;
+    }
+    .controls input, .controls button {
+      margin-right: 10px;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🖤 Black & White Grid Drawing Tool</h2>
+
+  <div class="controls">
+    <input type="file" id="imageUpload" accept="image/*">
+    <button onclick="convertToBW()">Convert to B&W</button>
+    <button onclick="drawGrid()">Draw Grid</button>
+    <button onclick="resetImage()">Reset</button>
+    <br>
+    <label>Rows: <input type="number" id="rows" value="4" min="1"></label>
+    <label>Columns: <input type="number" id="cols" value="4" min="1"></label>
+    <label>Line Color: <input type="color" id="lineColor" value="#000000"></label>
+    <label>Line Width: <input type="number" id="lineWidth" value="1" min="1" max="10"></label>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let originalImage = null;
+
+    document.getElementById('imageUpload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const img = new Image();
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        originalImage = img;
+      };
+      img.src = URL.createObjectURL(file);
+    });
+
+    function convertToBW() {
+      if (!originalImage) {
+        alert("Please upload an image first.");
+        return;
+      }
+
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const avg = (data[i] + data[i+1] + data[i+2]) / 3;
+        data[i] = avg;
+        data[i+1] = avg;
+        data[i+2] = avg;
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+    }
+
+    function drawGrid() {
+      if (!originalImage) {
+        alert("Please upload an image first.");
+        return;
+      }
+
+      const rows = parseInt(document.getElementById('rows').value);
+      const cols = parseInt(document.getElementById('cols').value);
+      const lineColor = document.getElementById('lineColor').value;
+      const lineWidth = parseInt(document.getElementById('lineWidth').value);
+
+      // Redraw image
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(originalImage, 0, 0);
+
+      const cellWidth = canvas.width / cols;
+      const cellHeight = canvas.height / rows;
+
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = lineWidth;
+      ctx.font = "12px Arial";
+      ctx.fillStyle = lineColor;
+
+      // Draw vertical lines and column numbers
+      for (let i = 0; i <= cols; i++) {
+        const x = i * cellWidth;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+
+        if (i < cols) {
+          ctx.fillText(i + 1, x + 4, 12); // Column label
+        }
+      }
+
+      // Draw horizontal lines and row numbers
+      for (let j = 0; j <= rows; j++) {
+        const y = j * cellHeight;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+
+        if (j < rows) {
+          ctx.fillText(j + 1, 4, y + 12); // Row label
+        }
+      }
+    }
+
+    function resetImage() {
+      if (originalImage) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(originalImage, 0, 0);
+      }
+    }
+  </script>
+
+</body>
+</html>
