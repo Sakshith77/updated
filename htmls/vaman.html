@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Divine Realm - Vamana Avatar</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Georgia', serif;
+    }
+
+    body {
+      background: linear-gradient(180deg, 
+        #001233 0%,
+        #003366 15%,
+        #005b96 30%,
+        #0099cc 50%,
+        #66c2ff 70%,
+        #b3e0ff 85%,
+        #e6f7ff 100%);
+      position: relative;
+      animation: cosmicShift 12s ease-in-out infinite;
+    }
+
+    @keyframes cosmicShift {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.15); }
+    }
+
+    /* Stars in background */
+    .star {
+      position: fixed;
+      width: 3px;
+      height: 3px;
+      background: white;
+      border-radius: 50%;
+      z-index: 1;
+      animation: starTwinkle 3s ease-in-out infinite;
+      box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.5); }
+    }
+
+    /* Cosmic energy overlay */
+    .cosmic-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(ellipse at 50% 50%, rgba(255, 215, 0, 0.1) 0%, transparent 60%);
+      animation: energyPulse 6s ease-in-out infinite;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    @keyframes energyPulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.7; }
+    }
+
+    #vamanaCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+    }
+
+    /* King Bali */
+    .bali-container {
+      position: fixed;
+      bottom: 15%;
+      left: 20%;
+      z-index: 4;
+      animation: baliFloat 3s ease-in-out infinite;
+      transition: all 1s ease-out;
+    }
+
+    .bali-container.pushed-down {
+      animation: baliPushDown 2s ease-out forwards;
+    }
+
+    @keyframes baliFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes baliPushDown {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(200px) scale(0.8);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(400px) scale(0.5);
+        opacity: 0;
+      }
+    }
+
+    .bali-figure {
+      font-size: 100px;
+      text-align: center;
+      filter: drop-shadow(0 0 20px rgba(218, 165, 32, 0.8));
+    }
+
+    .bali-crown {
+      font-size: 40px;
+      text-align: center;
+    }
+
+    /* Divine title */
+    .divine-title {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 80px;
+      color: #ffd700;
+      text-shadow: 
+        0 0 30px rgba(255, 215, 0, 1),
+        0 0 60px rgba(0, 123, 255, 0.8),
+        3px 3px 10px rgba(0, 0, 0, 0.7);
+      z-index: 11;
+      font-weight: bold;
+      pointer-events: none;
+      opacity: 0;
+      text-align: center;
+    }
+
+    .divine-title.show {
+      animation: titleAppear 3s ease-out forwards;
+    }
+
+    @keyframes titleAppear {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0);
+      }
+      30% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.3);
+      }
+      60% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
+
+    /* Buttons */
+    .expand-button {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 12;
+      padding: 20px 40px;
+      font-size: 22px;
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      border: 3px solid #ffd700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 5px 30px rgba(0, 123, 255, 0.6);
+      transition: all 0.3s ease;
+      font-weight: bold;
+      color: white;
+    }
+
+    .expand-button:hover {
+      transform: translateX(-50%) translateY(-5px) scale(1.08);
+      box-shadow: 0 10px 40px rgba(0, 123, 255, 0.9);
+    }
+
+    .expand-button:active {
+      transform: translateX(-50%) translateY(-2px) scale(1.02);
+    }
+
+    .story-button {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      z-index: 12;
+      padding: 15px 30px;
+      font-size: 18px;
+      background: linear-gradient(135deg, #007bff 0%, #00a8ff 100%);
+      color: white;
+      border: 2px solid #66c2ff;
+      border-radius: 15px;
+      text-decoration: none;
+      box-shadow: 0 5px 25px rgba(0, 123, 255, 0.5);
+      transition: all 0.3s ease;
+      font-weight: bold;
+      backdrop-filter: blur(10px);
+      display: inline-block;
+    }
+
+    .story-button:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 35px rgba(0, 123, 255, 0.7);
+    }
+
+    .audio-controls {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      z-index: 12;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: rgba(0, 51, 102, 0.7);
+      padding: 10px 20px;
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(102, 194, 255, 0.3);
+    }
+
+    .audio-btn {
+      background: none;
+      border: none;
+      color: #66c2ff;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 5px;
+    }
+
+    .audio-btn:hover {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 10px #66c2ff);
+    }
+
+    .volume-slider {
+      width: 80px;
+      height: 4px;
+      background: rgba(102, 194, 255, 0.3);
+      border-radius: 2px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: #66c2ff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    /* Cosmic particles */
+    .cosmic-particle {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: gold;
+      border-radius: 50%;
+      z-index: 9;
+      animation: particleRise 3s ease-out infinite;
+      pointer-events: none;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.9);
+    }
+
+    @keyframes particleRise {
+      0% {
+        opacity: 0;
+        transform: translateY(0) scale(0);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-150px) scale(1.5);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-300px) scale(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .divine-title {
+        font-size: 48px;
+      }
+
+      .expand-button {
+        font-size: 18px;
+        padding: 15px 30px;
+      }
+
+      .bali-figure {
+        font-size: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Stars -->
+  <script>
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 70 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      document.body.appendChild(star);
+    }
+  </script>
+
+  <!-- Cosmic overlay -->
+  <div class="cosmic-overlay"></div>
+
+  <!-- Canvas for Vamana transformation -->
+  <canvas id="vamanaCanvas"></canvas>
+
+  <!-- King Bali -->
+  <div class="bali-container" id="baliContainer">
+    <div class="bali-crown">👑</div>
+    <div class="bali-figure">🤴</div>
+    <div style="text-align: center; color: #ffd700; font-size: 20px; font-weight: bold; text-shadow: 0 0 10px rgba(0,0,0,0.5);">King Bali</div>
+  </div>
+
+  <!-- Divine Title -->
+  <div class="divine-title" id="divineTitle">
+    🦶 श्री वामन अवतार 🦶<br>
+    <span style="font-size: 0.5em;">त्रिविक्रम - Trivikrama</span>
+  </div>
+
+  <!-- Story Button -->
+  <a href="vamana-story.html" class="story-button">🦶 View Vamana's Story</a>
+
+  <!-- Audio Controls -->
+  <div class="audio-controls">
+    <button class="audio-btn" id="playPauseBtn">▶️</button>
+    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
+    <span class="audio-btn">🔊</span>
+  </div>
+
+  <!-- Expand Button -->
+  <button class="expand-button" id="expandButton">✨ EXPAND TO TRIVIKRAMA</button>
+
+  <!-- Audio Elements -->
+  <audio id="vamanaAudio" loop>
+    <source src="audio/vamana-dhun.mp3" type="audio/mp3" />
+  </audio>
+
+  <audio id="expansionSound">
+    <source src="audio/cosmic-expansion.mp3" type="audio/mp3" />
+  </audio>
+
+  <audio id="victorySound">
+    <source src="audio/victory.mp3" type="audio/mp3" />
+  </audio>
+
+  <script>
+    const canvas = document.getElementById('vamanaCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    const vamanaAudio = document.getElementById("vamanaAudio");
+    const expansionSound = document.getElementById("expansionSound");
+    const victorySound = document.getElementById("victorySound");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const volumeSlider = document.getElementById("volumeSlider");
+    const expandButton = document.getElementById("expandButton");
+    const baliContainer = document.getElementById("baliContainer");
+    const divineTitle = document.getElementById("divineTitle");
+
+    let isPlaying = false;
+    let isExpanding = false;
+    let animationFrame = 0;
+    let expansionProgress = 0;
+    let celebrationParticles = [];
+    let celebrationActive = false;
+
+    // Vamana position and size
+    let vamanaX = canvas.width * 0.6;
+    let vamanaY = canvas.height * 0.7;
+    let vamanaScale = 1; // Starts small (dwarf), grows massive
+    let breathingOffset = 0;
+
+    // Body part angles
+    let leftArmAngle = 20;
+    let rightArmAngle = -20;
+    let leftLegAngle = 0;
+    let rightLegAngle = 0;
+    let leftLegLifted = 0; // For stepping animation
+
+    vamanaAudio.volume = 0.5;
+    expansionSound.volume = 0.8;
+    victorySound.volume = 0.7;
+
+    // Celebration particle
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 15;
+        this.vy = (Math.random() - 0.5) * 15 - 8;
+        this.life = 1;
+        this.size = Math.random() * 10 + 5;
+        this.color = ['#ffd700', '#00bfff', '#ff8c00', '#ffed4e', '#00a8ff'][Math.floor(Math.random() * 5)];
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.vy += 0.4;
+        this.life -= 0.012;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.life;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 20;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Draw Vamana/Trivikrama
+    function drawVamana() {
+      const x = vamanaX;
+      const y = vamanaY + breathingOffset;
+      const scale = vamanaScale;
+      
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(scale, scale);
+
+      // Left Leg
+      ctx.save();
+      ctx.translate(-25, 80);
+      ctx.rotate((leftLegAngle * Math.PI) / 180);
+      ctx.fillStyle = '#ffb347';
+      ctx.strokeStyle = '#ff8c00';
+      ctx.lineWidth = 3;
+      ctx.fillRect(-12, 0, 24, 100);
+      ctx.strokeRect(-12, 0, 24, 100);
+      // Foot
+      ctx.fillStyle = '#ff6347';
+      ctx.fillRect(-15, 100, 30, 12);
+      ctx.restore();
+      
+      // Right Leg (lifted for stepping)
+      ctx.save();
+      ctx.translate(25, 80 - leftLegLifted);
+      ctx.rotate((rightLegAngle * Math.PI) / 180);
+      ctx.fillStyle = '#ffb347';
+      ctx.strokeStyle = '#ff8c00';
+      ctx.lineWidth = 3;
+      ctx.fillRect(-12, 0, 24, 100);
+      ctx.strokeRect(-12, 0, 24, 100);
+      // Foot
+      ctx.fillStyle = '#ff6347';
+      ctx.fillRect(-15, 100, 30, 12);
+      
+      // Divine glow on foot (especially when lifted)
+      if (leftLegLifted > 50) {
+        ctx.shadowColor = 'rgba(255, 215, 0, 0.9)';
+        ctx.shadowBlur = 30;
+        ctx.fillStyle = '#ffd700';
+        ctx.fillRect(-15, 100, 30, 12);
+      }
+      ctx.restore();
+      
+      // Body (torso)
+      ctx.fillStyle = '#ff8c42';
+      ctx.strokeStyle = '#ff6347';
+      ctx.lineWidth = 3;
+      ctx.fillRect(-40, -70, 80, 150);
+      ctx.strokeRect(-40, -70, 80, 150);
+      
+      // Sacred thread
+      ctx.strokeStyle = '#ffd700';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(-30, -60);
+      ctx.lineTo(30, 70);
+      ctx.stroke();
+      
+      // Head
+      ctx.save();
+      ctx.translate(0, -90);
+      ctx.fillStyle = '#ffdbac';
+      ctx.strokeStyle = '#ff8c00';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(0, 0, 35, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      
+      // Brahmin tuft
+      ctx.fillStyle = '#8b4513';
+      ctx.beginPath();
+      ctx.arc(0, -35, 10, 0, Math.PI * 2);
+      ctx.fill();
+      
+      // Eyes
+      ctx.fillStyle = '#000';
+      ctx.fillRect(-12, -5, 8, 8);
+      ctx.fillRect(4, -5, 8, 8);
+      
+      // Smile
+      ctx.strokeStyle = '#8b4513';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 5, 15, 0, Math.PI);
+      ctx.stroke();
+      ctx.restore();
+      
+      // Left Arm
+      ctx.save();
+      ctx.translate(-50, -40);
+      ctx.rotate((leftArmAngle * Math.PI) / 180);
+      ctx.fillStyle = '#ffdbac';
+      ctx.strokeStyle = '#ff8c00';
+      ctx.lineWidth = 3;
+      ctx.fillRect(-12, 0, 24, 70);
+      ctx.strokeRect(-12, 0, 24, 70);
+      // Forearm
+      ctx.save();
+      ctx.translate(0, 70);
+      ctx.fillRect(-10, 0, 20, 60);
+      ctx.strokeRect(-10, 0, 20, 60);
+      // Hand with umbrella
+      ctx.fillStyle = '#8b4513';
+      ctx.beginPath();
+      ctx.arc(0, 60, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.restore();
+      
+      // Right Arm
+      ctx.save();
+      ctx.translate(50, -40);
+      ctx.rotate((rightArmAngle * Math.PI) / 180);
+      ctx.fillStyle = '#ffdbac';
+      ctx.strokeStyle = '#ff8c00';
+      ctx.lineWidth = 3;
+      ctx.fillRect(-12, 0, 24, 70);
+      ctx.strokeRect(-12, 0, 24, 70);
+      // Forearm
+      ctx.save();
+      ctx.translate(0, 70);
+      ctx.fillRect(-10, 0, 20, 60);
+      ctx.strokeRect(-10, 0, 20, 60);
+      // Hand with water pot
+      ctx.fillStyle = '#cd853f';
+      ctx.fillRect(-12, 60, 24, 30);
+      ctx.strokeRect(-12, 60, 24, 30);
+      ctx.restore();
+      ctx.restore();
+
+      // Umbrella (held in left hand)
+      ctx.save();
+      ctx.translate(-50 + Math.cos((leftArmAngle * Math.PI) / 180) * 130, 
+                    -40 + Math.sin((leftArmAngle * Math.PI) / 180) * 130);
+      ctx.fillStyle = '#ff6347';
+      ctx.strokeStyle = '#8b0000';
+      ctx.lineWidth = 2;
+      // Umbrella canopy
+      ctx.beginPath();
+      ctx.arc(0, 0, 40, 0, Math.PI, true);
+      ctx.fill();
+      ctx.stroke();
+      // Handle
+      ctx.strokeStyle = '#8b4513';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, 50);
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.restore();
+      
+      // Divine aura when fully expanded
+      if (scale > 5) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+        ctx.lineWidth = 20;
+        ctx.beginPath();
+        ctx.arc(0, 0, scale * 150, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    // Animation loop
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      animationFrame++;
+      
+      // Breathing
+      breathingOffset = Math.sin(animationFrame * 0.05) * 3;
+      
+      // Idle animations
+      if (!isExpanding) {
+        leftArmAngle = Math.sin(animationFrame * 0.04) * 5 + 20;
+        rightArmAngle = Math.sin(animationFrame * 0.04) * 5 - 20;
+        leftLegAngle = Math.sin(animationFrame * 0.03) * 2;
+        rightLegAngle = -Math.sin(animationFrame * 0.03) * 2;
+      }
+      
+      // Celebration particles
+      if (celebrationActive) {
+        celebrationParticles.forEach((particle, index) => {
+          particle.update();
+          particle.draw();
+          if (particle.life <= 0) {
+            celebrationParticles.splice(index, 1);
+          }
+        });
+        
+        if (celebrationParticles.length < 200) {
+          for (let i = 0; i < 8; i++) {
+            celebrationParticles.push(new Particle(
+              canvas.width / 2 + (Math.random() - 0.5) * 400,
+              canvas.height / 2 + (Math.random() - 0.5) * 400
+            ));
+          }
+        }
+      }
+      
+      drawVamana();
+      
+      requestAnimationFrame(animate);
+    }
+
+    // Expansion animation
+    function expandToTrivikrama() {
+      if (isExpanding) return;
+      
+      isExpanding = true;
+      expansionProgress = 0;
+      
+      expansionSound.currentTime = 0;
+      expansionSound.play();
+      
+      const expandInterval = setInterval(() => {
+        expansionProgress++;
+        
+        // Scale grows from 1 to 8 (dwarf to cosmic giant)
+        vamanaScale = 1 + (expansionProgress / 50) * 7;
+        
+        // Move upward as growing
+        vamanaY = canvas.height * 0.7 - (expansionProgress * 8);
+        
+        // Lift right leg (stepping on Bali's head)
+        if (expansionProgress > 20) {
+          leftLegLifted = Math.min((expansionProgress - 20) * 10, 300);
+          rightLegAngle = -30;
+        }
+        
+        // Push Bali down
+        if (expansionProgress > 25) {
+          baliContainer.classList.add('pushed-down');
+        }
+        
+        // Arms spread wide
+        leftArmAngle = 20 + expansionProgress * 2;
+        rightArmAngle = -20 - expansionProgress * 2;
+        
+        if (expansionProgress >= 80) {
+          clearInterval(expandInterval);
+          
+          // Start celebration
+          setTimeout(() => {
+            celebrationActive = true;
+            divineTitle.classList.add('show');
+            
+            if (victorySound) {
+              victorySound.currentTime = 0;
+              victorySound.play();
+            }
+            
+            // Reset after 6 seconds
+            setTimeout(() => {
+              celebrationActive = false;
+              celebrationParticles = [];
+              vamanaScale = 1;
+              vamanaY = canvas.height * 0.7;
+              leftArmAngle = 20;
+              rightArmAngle = -20;
+              leftLegLifted = 0;
+              rightLegAngle = 0;
+              baliContainer.classList.remove('pushed-down');
+              baliContainer.style.opacity = '1';
+              baliContainer.style.transform = 'translateY(0)';
+              divineTitle.classList.remove('show');
+              isExpanding = false;
+            }, 6000);
+            
+          }, 500);
+        }
+      }, 40);
+    }
+
+    animate();
+
+    expandButton.addEventListener("click", expandToTrivikrama);
+
+    // Audio controls
+    playPauseBtn.addEventListener("click", () => {
+      if (isPlaying) {
+        vamanaAudio.pause();
+        playPauseBtn.textContent = "▶️";
+      } else {
+        vamanaAudio.play().catch(err => console.log("Playback error:", err));
+        playPauseBtn.textContent = "⏸️";
+      }
+      isPlaying = !isPlaying;
+    });
+
+    volumeSlider.addEventListener("input", (e) => {
+      vamanaAudio.volume = e.target.value / 100;
+    });
+
+    document.body.addEventListener("click", () => {
+      if (!isPlaying) {
+        vamanaAudio.play().then(() => {
+          isPlaying = true;
+          playPauseBtn.textContent = "⏸️";
+        }).catch(err => console.log("Autoplay blocked:", err));
+      }
+    }, { once: true });
+
+    setInterval(expandToTrivikrama, 15000);
+  </script>
+
+</body>
+</html>

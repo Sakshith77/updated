@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Retro Space Survivor: BOSS EDITION</title>
+    <style>
+        body { margin: 0; background: #050505; color: #fff; font-family: 'Courier New', monospace; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        canvas { background: #000; border: 2px solid #333; box-shadow: 0 0 20px rgba(0,255,255,0.2); }
+        .ui { position: absolute; top: 20px; text-align: center; width: 100%; pointer-events: none; }
+        #bossBarContainer { width: 400px; height: 10px; background: #333; margin: 10px auto; display: none; border: 1px solid #fff; }
+        #bossBar { width: 100%; height: 100%; background: #ff0000; transition: width 0.1s; }
+        #status { font-size: 12px; color: #555; }
+    </style>
+</head>
+<body>
+
+    <div class="ui">
+        <h1 id="score">SCORE: 0</h1>
+        <div id="bossBarContainer"><div id="bossBar"></div></div>
+        <div id="status">TWIN-STICK MODE: Left Stick Move | Right Stick Shoot</div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const bossBarCont = document.getElementById('bossBarContainer');
+        const bossBar = document.getElementById('bossBar');
+        
+        canvas.width = 800;
+        canvas.height = 600;
+
+        let score = 0;
+        let gameOver = false;
+        let particles = [];
+        let enemies = [];
+        let bullets = [];
+        let bossBullets = [];
+        let gamepadIndex = null;
+        let boss = null;
+
+        const player = {
+            x: canvas.width / 2, y: canvas.height / 2,
+            radius: 12, color: '#00ffff', speed: 5,
+            lastShot: 0, shootDelay: 120
+        };
+
+        window.addEventListener("gamepadconnected", (e) => { gamepadIndex = e.gamepad.index; });
+
+        function spawnEnemy() {
+            if (gameOver || boss) return; // Stop small enemies during boss
+            const side = Math.floor(Math.random() * 4);
+            let x, y;
+            if (side === 0) { x = Math.random()*canvas.width; y = -20; }
+            else if (side === 1) { x = canvas.width + 20; y = Math.random()*canvas.height; }
+            else if (side === 2) { x = Math.random()*canvas.width; y = canvas.height + 20; }
+            else { x = -20; y = Math.random()*canvas.height; }
+
+            enemies.push({ x, y, radius: 10, speed: 2 + (score/1000), color: '#ff3366' });
+            let nextSpawn = Math.max(200, 1000 - (score * 0.5));
+            setTimeout(spawnEnemy, nextSpawn);
+        }
+
+        function spawnBoss() {
+            bossBarCont.style.display = 'block';
+            rumble(500, 0.8);
+            boss = {
+                x: canvas.width / 2, y: -100,
+                radius: 50, hp: 100, maxHp: 100,
+                color: '#ff00ff', speed: 1.5,
+                lastShot: 0
+            };
+        }
+
+        function rumble(dur, intensity) {
+            const gp = navigator.getGamepads()[gamepadIndex];
+            if (gp?.vibrationActuator) {
+                gp.vibrationActuator.playEffect("dual-rumble", {
+                    duration: dur, strongMagnitude: intensity, weakMagnitude: intensity
+                });
+            }
+        }
+
+        function update() {
+            if (gameOver) return;
+
+            const gp = navigator.getGamepads()[gamepadIndex];
+            if (gp) {
+                if (Math.abs(gp.axes[0]) > 0.1) player.x += gp.axes[0] * player.speed;
+                if (Math.abs(gp.axes[1]) > 0.1) player.y += gp.axes[1] * player.speed;
+
+                const rx = gp.axes[2], ry = gp.axes[3];
+                if (Math.abs(rx) > 0.4 || Math.abs(ry) > 0.4) {
+                    const now = Date.now();
+                    if (now - player.lastShot > player.shootDelay) {
+                        bullets.push({ x: player.x, y: player.y, vx: rx * 12, vy: ry * 12 });
+                        player.lastShot = now;
+                    }
+                }
+            }
+
+            // Screen Wrap
+            player.x = (player.x + canvas.width) % canvas.width;
+            player.y = (player.y + canvas.height) % canvas.height;
+
+            // Update Player Bullets
+            bullets.forEach((b, i) => {
+                b.x += b.vx; b.y += b.vy;
+                if (b.x < 0 || b.x > canvas.width || b.y < 0 || b.y > canvas.height) bullets.splice(i, 1);
+            });
+
+            // Boss Logic
+            if (boss) {
+                const dx = player.x - boss.x, dy = player.y - boss.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                boss.x += (dx/dist) * boss.speed;
+                boss.y += (dy/dist) * boss.speed;
+
+                // Boss Shooting Nova
+                if (Date.now() - boss.lastShot > 1500) {
+                    for(let i=0; i<12; i++) {
+                        const angle = (Math.PI * 2 / 12) * i;
+                        bossBullets.push({ x: boss.x, y: boss.y, vx: Math.cos(angle)*4, vy: Math.sin(angle)*4 });
+                    }
+                    boss.lastShot = Date.now();
+                }
+
+                // Bullet hits boss
+                bullets.forEach((b, bi) => {
+                    if (Math.hypot(b.x - boss.x, b.y - boss.y) < boss.radius) {
+                        boss.hp -= 2;
+                        bullets.splice(bi, 1);
+                        bossBar.style.width = (boss.hp / boss.maxHp * 100) + "%";
+                        rumble(50, 0.3);
+                        if (boss.hp <= 0) {
+                            score += 500;
+                            scoreEl.textContent = `SCORE: ${score}`;
+                            boss = null;
+                            bossBarCont.style.display = 'none';
+                            spawnEnemy();
+                        }
+                    }
+                });
+            }
+
+            // Check Boss Bullets
+            bossBullets.forEach((bb, i) => {
+                bb.x += bb.vx; bb.y += bb.vy;
+                if (Math.hypot(bb.x - player.x, bb.y - player.y) < player.radius) endGame();
+                if (bb.x < -50 || bb.x > canvas.width+50) bossBullets.splice(i, 1);
+            });
+
+            // Update Enemies
+            enemies.forEach((en, i) => {
+                const dx = player.x - en.x, dy = player.y - en.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                en.x += (dx/dist) * en.speed; en.y += (dy/dist) * en.speed;
+
+                if (dist < player.radius + en.radius) endGame();
+
+                bullets.forEach((b, bi) => {
+                    if (Math.hypot(b.x - en.x, b.y - en.y) < en.radius + 5) {
+                        enemies.splice(i, 1); bullets.splice(bi, 1);
+                        score += 10;
+                        scoreEl.textContent = `SCORE: ${score}`;
+                        if (score % 500 === 0 && !boss) spawnBoss();
+                    }
+                });
+            });
+        }
+
+        function endGame() {
+            gameOver = true;
+            rumble(1000, 1.0);
+            alert("GAME OVER! FINAL SCORE: " + score);
+            location.reload();
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Boss
+            if (boss) {
+                ctx.beginPath();
+                ctx.arc(boss.x, boss.y, boss.radius, 0, Math.PI*2);
+                ctx.fillStyle = boss.color;
+                ctx.shadowBlur = 30; ctx.shadowColor = '#ff00ff';
+                ctx.fill();
+            }
+
+            // Draw Player
+            ctx.beginPath();
+            ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2);
+            ctx.fillStyle = player.color;
+            ctx.shadowBlur = 15; ctx.shadowColor = player.color;
+            ctx.fill();
+
+            // Draw Everything Else
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = '#fff';
+            bullets.forEach(b => ctx.fillRect(b.x, b.y, 4, 4));
+            
+            ctx.fillStyle = '#ff0000';
+            bossBullets.forEach(bb => {
+                ctx.beginPath(); ctx.arc(bb.x, bb.y, 6, 0, Math.PI*2); ctx.fill();
+            });
+
+            ctx.fillStyle = '#ff3366';
+            enemies.forEach(en => {
+                ctx.beginPath(); ctx.arc(en.x, en.y, en.radius, 0, Math.PI*2); ctx.fill();
+            });
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        spawnEnemy();
+        gameLoop();
+    </script>
+</body>
+</html>
+

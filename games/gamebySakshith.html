@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Retro Space Survivor: MOBILE ENHANCED</title>
+    <style>
+        body { 
+            margin: 0; background: #000; color: #fff; 
+            font-family: 'Courier New', monospace; overflow: hidden; 
+            display: flex; flex-direction: column; align-items: center; 
+            touch-action: none;
+            background: radial-gradient(circle at center, #0a0a2a 0%, #000 100%);
+        }
+        canvas { 
+            background: transparent; 
+            display: block; 
+            max-width: 100%; 
+            height: auto; 
+        }
+        .ui { 
+            position: absolute; 
+            top: 10px; 
+            text-align: center; 
+            width: 100%; 
+            pointer-events: none; 
+            z-index: 10; 
+        }
+        #bossBarContainer { 
+            width: 60%; 
+            height: 12px; 
+            background: linear-gradient(90deg, #333, #555); 
+            margin: 10px auto; 
+            display: none; 
+            border: 2px solid #00ffff;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 0 15px #00ffff;
+        }
+        #bossBar { 
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(90deg, #ff0000, #ff9900);
+            transition: width 0.3s ease;
+        }
+        #score { 
+            font-size: 28px; 
+            margin: 0; 
+            text-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        #credit {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #888;
+            z-index: 10;
+       }
+        #startBtn { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%);
+            padding: 25px 50px; 
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            color: #000; 
+            border: none;
+            font-weight: bold; 
+            font-size: 24px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            z-index: 100;
+            box-shadow: 0 0 30px #00ffff, 0 0 50px #ff00ff;
+            transition: transform 0.2s;
+        }
+        #startBtn:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+        
+        .joystick-info {
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            font-size: 12px;
+            color: #0ff;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="startBtn">🚀 START GAME</button>
+    
+    <div class="ui">
+        <h1 id="score">SCORE: 0</h1>
+        <div id="bossBarContainer"><div id="bossBar"></div></div>
+    </div>
+    
+    <div id="credit">Created by Sakshith with ❤️ | Enhanced Version</div>
+    <div class="joystick-info">← Move &nbsp;&nbsp; &nbsp;&nbsp;→ Shoot</div>
+    
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const bossBarCont = document.getElementById('bossBarContainer');
+        const bossBar = document.getElementById('bossBar');
+        const startBtn = document.getElementById('startBtn');
+        
+        // Mobile Setup
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Game state
+        let score = 0;
+        let gameOver = false;
+        let gameRunning = false;
+        let enemies = [];
+        let bullets = [];
+        let bossBullets = [];
+        let boss = null;
+        let particles = [];
+        let backgroundStars = [];
+        let lastBossSpawnScore = 0;
+        // Create background stars
+        for(let i = 0; i < 100; i++) {
+            backgroundStars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 2 + 1,
+                speed: Math.random() * 0.5 + 0.2,
+                brightness: Math.random() * 0.5 + 0.5
+            });
+        }
+
+        // Enhanced player with visual effects
+        const player = {
+            x: canvas.width / 2, 
+            y: canvas.height / 2,
+            radius: 18, 
+            color: '#00ffff',
+            speed: 5,
+            lastShot: 0, 
+            shootDelay: 120,
+            thrusterAngle: 0,
+            colorHue: 180,
+            trail: []
+        };
+
+        // Mobile Joystick State
+        const joystickL = { active: false, startX: 0, startY: 0, currX: 0, currY: 0, moveX: 0, moveY: 0 };
+        const joystickR = { active: false, startX: 0, startY: 0, currX: 0, currY: 0, shootX: 0, shootY: 0 };
+
+        // Color palette for enemies
+        const enemyColors = ['#ff3366', '#33ff66', '#3366ff', '#ffcc00', '#ff33cc', '#33ffff'];
+        const bulletColors = ['#ffffff', '#ffff00', '#00ffff', '#ff8800'];
+
+        // --- Touch Listeners ---
+        window.addEventListener('touchstart', e => {
+            if(!gameRunning) return;
+            for(let t of e.changedTouches) {
+                if (t.clientX < window.innerWidth / 2) {
+                    joystickL.active = true; 
+                    joystickL.id = t.identifier;
+                    joystickL.startX = t.clientX; 
+                    joystickL.startY = t.clientY;
+                    joystickL.currX = t.clientX; 
+                    joystickL.currY = t.clientY;
+                } else {
+                    joystickR.active = true; 
+                    joystickR.id = t.identifier;
+                    joystickR.startX = t.clientX; 
+                    joystickR.startY = t.clientY;
+                    joystickR.currX = t.clientX; 
+                    joystickR.currY = t.clientY;
+                }
+            }
+        });
+
+        window.addEventListener('touchmove', e => {
+            for(let t of e.changedTouches) {
+                if (joystickL.active && t.identifier === joystickL.id) {
+                    let dx = t.clientX - joystickL.startX;
+                    let dy = t.clientY - joystickL.startY;
+                    let dist = Math.min(50, Math.hypot(dx, dy));
+                    let angle = Math.atan2(dy, dx);
+                    joystickL.moveX = (Math.cos(angle) * dist) / 50;
+                    joystickL.moveY = (Math.sin(angle) * dist) / 50;
+                    joystickL.currX = t.clientX; 
+                    joystickL.currY = t.clientY;
+                }
+                if (joystickR.active && t.identifier === joystickR.id) {
+                    let dx = t.clientX - joystickR.startX;
+                    let dy = t.clientY - joystickR.startY;
+                    let angle = Math.atan2(dy, dx);
+                    joystickR.shootX = Math.cos(angle);
+                    joystickR.shootY = Math.sin(angle);
+                    joystickR.currX = t.clientX; 
+                    joystickR.currY = t.clientY;
+                }
+            }
+        });
+
+        window.addEventListener('touchend', e => {
+            for(let t of e.changedTouches) {
+                if (t.identifier === joystickL.id) { 
+                    joystickL.active = false; 
+                    joystickL.moveX = 0; 
+                    joystickL.moveY = 0; 
+                }
+                if (t.identifier === joystickR.id) { 
+                    joystickR.active = false; 
+                    joystickR.shootX = 0; 
+                    joystickR.shootY = 0; 
+                }
+            }
+        });
+
+        // Start Game
+        startBtn.onclick = () => {
+            startBtn.style.display = 'none';
+            gameRunning = true;
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            }
+            spawnEnemy();
+            gameLoop();
+        };
+
+        // Enhanced spawnEnemy with different behaviors
+        function spawnEnemy() {
+            if (gameOver || boss) return;
+            
+            const side = Math.floor(Math.random() * 4);
+            let x, y;
+            if (side === 0) { x = Math.random()*canvas.width; y = -20; }
+            else if (side === 1) { x = canvas.width + 20; y = Math.random()*canvas.height; }
+            else if (side === 2) { x = Math.random()*canvas.width; y = canvas.height + 20; }
+            else { x = -20; y = Math.random()*canvas.height; }
+
+            const enemyTypes = ['chaser', 'zigzag', 'sinusoidal'];
+            const type = enemyTypes[Math.floor(Math.random() * enemyTypes.length)];
+            const speed = 1.8 + (score/2000);
+            
+            enemies.push({ 
+                x, y, 
+                radius: 14 + Math.random() * 6,
+                speed: speed,
+                color: enemyColors[Math.floor(Math.random() * enemyColors.length)],
+                type: type,
+                angle: 0,
+                zigzagOffset: Math.random() * Math.PI * 2,
+                lastZigzag: Date.now(),
+                trail: []
+            });
+            
+            setTimeout(spawnEnemy, Math.max(200, 1000 - (score * 0.3)));
+        }
+
+        function createParticles(x, y, color, count = 10) {
+            for(let i = 0; i < count; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    radius: Math.random() * 3 + 1,
+                    color: color,
+                    life: 30
+                });
+            }
+        }
+
+        function spawnBoss() {
+            bossBarCont.style.display = 'block';
+            boss = { 
+                x: canvas.width / 2, 
+                y: -150, 
+                radius: 70, 
+                hp: 150, 
+                maxHp: 150, 
+                color: '#ff00ff',
+                speed: 1.2, 
+                lastShot: 0,
+                phase: 0,
+                lastPhaseChange: Date.now(),
+                trail: []
+            };
+        }
+
+        // Enhanced update function with smarter enemy movement
+        function update() {
+            if (gameOver || !gameRunning) return;
+
+            // Update background stars
+            backgroundStars.forEach(star => {
+                star.y += star.speed;
+                if (star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                }
+            });
+
+            // Player movement with trail
+            const prevX = player.x;
+            const prevY = player.y;
+            
+            player.x += joystickL.moveX * player.speed;
+            player.y += joystickL.moveY * player.speed;
+            player.thrusterAngle += 0.2;
+            
+            // Add to trail
+            player.trail.push({x: player.x, y: player.y});
+            if(player.trail.length > 10) player.trail.shift();
+            
+            // Create thruster particles when moving
+            if ((joystickL.moveX !== 0 || joystickL.moveY !== 0) && Math.random() < 0.7) {
+                createParticles(
+                    player.x - joystickL.moveX * 20,
+                    player.y - joystickL.moveY * 20,
+                    '#00ffff',
+                    2
+                );
+            }
+
+            // Shooting with visual effects
+            if (joystickR.active) {
+                const now = Date.now();
+                if (now - player.lastShot > player.shootDelay) {
+                    const bulletColor = bulletColors[Math.floor(Math.random() * bulletColors.length)];
+                    bullets.push({ 
+                        x: player.x, 
+                        y: player.y, 
+                        vx: joystickR.shootX * 12, 
+                        vy: joystickR.shootY * 12,
+                        color: bulletColor,
+                        trail: []
+                    });
+                    player.lastShot = now;
+                    
+                    // Shooting particles
+                    createParticles(player.x, player.y, bulletColor, 5);
+                }
+            }
+
+            // Screen Wrap
+            player.x = (player.x + canvas.width) % canvas.width;
+            player.y = (player.y + canvas.height) % canvas.height;
+
+            // Update player bullets with trail
+            for(let i = bullets.length - 1; i >= 0; i--) {
+                let b = bullets[i];
+                b.trail.push({x: b.x, y: b.y});
+                if(b.trail.length > 5) b.trail.shift();
+                
+                b.x += b.vx; 
+                b.y += b.vy;
+                
+                if (b.x < -50 || b.x > canvas.width + 50 || b.y < -50 || b.y > canvas.height + 50) {
+                    bullets.splice(i, 1);
+                }
+            }
+
+            // Boss Logic with phases
+            if (boss) {
+                // Boss trail
+                boss.trail.push({x: boss.x, y: boss.y});
+                if(boss.trail.length > 15) boss.trail.shift();
+                
+                const dx = player.x - boss.x, dy = player.y - boss.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                // Phase changes
+                const now = Date.now();
+                if(now - boss.lastPhaseChange > 10000) {
+                    boss.phase = (boss.phase + 1) % 3;
+                    boss.lastPhaseChange = now;
+                    boss.speed = boss.phase === 1 ? 2 : 1.2;
+                }
+                
+                if(boss.phase !== 2) {
+                    boss.x += (dx/dist) * boss.speed;
+                    boss.y += (dy/dist) * boss.speed;
+                } else {
+                    // Circle pattern phase
+                    const angle = now * 0.001;
+                    boss.x = canvas.width/2 + Math.cos(angle) * 200;
+                    boss.y = canvas.height/2 + Math.sin(angle) * 200;
+                }
+
+                // Boss shooting patterns based on phase
+                if (Date.now() - boss.lastShot > (boss.phase === 1 ? 1000 : 2000)) {
+                    let bulletCount = boss.phase === 1 ? 16 : 8;
+                    for(let i=0; i<bulletCount; i++) {
+                        const angle = (Math.PI * 2 / bulletCount) * i + (Date.now() * 0.001);
+                        bossBullets.push({ 
+                            x: boss.x, 
+                            y: boss.y, 
+                            vx: Math.cos(angle)*4, 
+                            vy: Math.sin(angle)*4,
+                            color: boss.phase === 1 ? '#ff9900' : '#ff0000',
+                            size: boss.phase === 1 ? 8 : 6
+                        });
+                    }
+                    boss.lastShot = Date.now();
+                }
+
+                // Player bullet collision with boss
+                bullets.forEach((b, bi) => {
+                    if (Math.hypot(b.x - boss.x, b.y - boss.y) < boss.radius) {
+                        boss.hp -= (boss.phase === 1 ? 1 : 2); 
+                        bullets.splice(bi, 1);
+                        bossBar.style.width = (boss.hp / boss.maxHp * 100) + "%";
+                        createParticles(b.x, b.y, b.color, 8);
+                        
+                        if (boss.hp <= 0) {
+                            score += 1000; 
+                            scoreEl.textContent = `SCORE: ${score}`;
+                            createParticles(boss.x, boss.y, boss.color, 50);
+                            boss = null; 
+                            bossBarCont.style.display = 'none';
+                            spawnEnemy();
+                        }
+                    }
+                });
+            }
+
+            // Enhanced enemy movement with different behaviors
+            for(let i = enemies.length - 1; i >= 0; i--) {
+                let en = enemies[i];
+                
+                // Add to enemy trail
+                en.trail.push({x: en.x, y: en.y});
+                if(en.trail.length > 8) en.trail.shift();
+                
+                const dx = player.x - en.x, dy = player.y - en.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                
+                // Different movement patterns
+                switch(en.type) {
+                    case 'chaser':
+                        en.x += (dx/dist) * en.speed;                         en.y += (dy/dist) * en.speed;
+                        break;
+                        
+                    case 'zigzag':
+                        const now = Date.now();
+                        const zigzag = Math.sin(now * 0.005 + en.zigzagOffset) * 50;
+                        en.angle = Math.atan2(dy, dx) + zigzag * 0.01;
+                        en.x += Math.cos(en.angle) * en.speed;
+                        en.y += Math.sin(en.angle) * en.speed;
+                        break;
+                        
+                    case 'sinusoidal':
+                        en.x += (dx/dist) * en.speed;
+                        en.y += (dy/dist) * en.speed + Math.sin(Date.now() * 0.005) * 2;
+                        break;
+                }
+
+                // Player collision
+                if (dist < player.radius + en.radius) {
+                    createParticles(player.x, player.y, player.color, 20);
+                    createParticles(en.x, en.y, en.color, 20);
+                    endGame();
+                }
+
+                // Bullet collision
+                for(let bi = bullets.length - 1; bi >= 0; bi--) {
+                    if (Math.hypot(bullets[bi].x - en.x, bullets[bi].y - en.y) < en.radius + 10) {
+                        createParticles(en.x, en.y, en.color, 15);
+                        createParticles(bullets[bi].x, bullets[bi].y, bullets[bi].color, 8);
+                        
+                        enemies.splice(i, 1); 
+                        bullets.splice(bi, 1);
+                        score += 15; 
+                        scoreEl.textContent = `SCORE: ${score}`;
+                        
+                       if (!boss && score >= 400 && score >= lastBossSpawnScore + 400) {
+    spawnBoss();
+    lastBossSpawnScore = Math.floor(score / 400) * 400;
+}break;
+                    }
+                }
+            }
+
+            // Update boss bullets
+            bossBullets.forEach(bb => {
+                bb.x += bb.vx; 
+                bb.y += bb.vy;
+                if (Math.hypot(bb.x - player.x, bb.y - player.y) < player.radius) {
+                    endGame();
+                }
+            });
+
+            // Update particles
+            for(let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                p.radius *= 0.95;
+                if(p.life <= 0) particles.splice(i, 1);
+            }
+        }
+
+        function endGame() {
+            gameOver = true;
+            // Create explosion effect
+            for(let i = 0; i < 50; i++) {
+                createParticles(player.x, player.y, player.color, 1);
+            }
+            
+            setTimeout(() => {
+                alert("GAME OVER! FINAL SCORE: " + score + "\n\nCreated by Sakshith");
+                location.reload();
+            }, 500);
+        }
+
+        function draw() {
+            // Draw space background
+            ctx.fillStyle = 'rgba(0, 0, 10, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw stars
+            ctx.fillStyle = 'white';
+            backgroundStars.forEach(star => {
+                ctx.globalAlpha = star.brightness;
+                ctx.fillRect(star.x, star.y, star.size, star.size);
+            });
+            ctx.globalAlpha = 1;
+
+const gradient = ctx.createRadialGradient(
+                canvas.width/2, canvas.height/2, 0,
+                canvas.width/2, canvas.height/2, canvas.width
+            );
+            gradient.addColorStop(0, 'rgba(0, 20, 100, 0.1)');
+            gradient.addColorStop(1, 'rgba(100, 0, 50, 0.05)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw particle trails first
+            particles.forEach(p => {
+                ctx.globalAlpha = p.life / 30;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+
+            // Draw enemy trails
+            enemies.forEach(en => {
+                en.trail.forEach((point, index) => {
+                    const alpha = index / en.trail.length * 0.5;
+                    ctx.fillStyle = en.color.replace(')', `, ${alpha})`).replace('rgb', 'rgba');
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, en.radius * (index/en.trail.length), 0, Math.PI*2);
+                    ctx.fill();
+                });
+            });
+
+            // Draw boss trail
+            if(boss) {
+                boss.trail.forEach((point, index) => {
+                    const alpha = index / boss.trail.length * 0.3;
+                    ctx.fillStyle = boss.color.replace(')', `, ${alpha})`).replace('rgb', 'rgba');
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, boss.radius * (index/boss.trail.length * 0.8), 0, Math.PI*2);
+                    ctx.fill();
+                });
+            }
+
+            // Draw player trail
+            player.trail.forEach((point, index) => {
+                const alpha = index / player.trail.length * 0.6;
+                ctx.fillStyle = player.color.replace(')', `, ${alpha})`).replace('rgb', 'rgba');
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, player.radius * (index/player.trail.length * 0.5), 0, Math.PI*2);
+                ctx.fill();
+            });
+
+            // Draw bullet trails
+            bullets.forEach(b => {
+                b.trail.forEach((point, index) => {
+                    ctx.globalAlpha = index / b.trail.length * 0.8;
+                    ctx.fillStyle = b.color;
+                    ctx.fillRect(point.x, point.y, 6, 6);
+                });
+                ctx.globalAlpha = 1;
+            });
+
+            // Draw Joystick Guides
+            if (joystickL.active) {
+                ctx.strokeStyle = "rgba(0, 255, 255, 0.3)";
+                ctx.lineWidth = 3;
+                ctx.beginPath(); 
+                ctx.arc(joystickL.startX, joystickL.startY, 60, 0, Math.PI*2); 
+                ctx.stroke();
+                
+                ctx.fillStyle = "rgba(0, 255, 255, 0.6)";
+                ctx.beginPath(); 
+                ctx.arc(joystickL.currX, joystickL.currY, 25, 0, Math.PI*2); 
+                ctx.fill();
+            }
+            if (joystickR.active) {
+                ctx.strokeStyle = "rgba(255, 0, 255, 0.3)";
+                ctx.lineWidth = 3;
+                ctx.beginPath(); 
+                ctx.arc(joystickR.startX, joystickR.startY, 60, 0, Math.PI*2); 
+                ctx.stroke();
+                
+                ctx.fillStyle = "rgba(255, 0, 255, 0.6)";
+                ctx.beginPath(); 
+                ctx.arc(joystickR.currX, joystickR.currY, 25, 0, Math.PI*2); 
+                ctx.fill();
+            }
+
+            // Draw Boss with pattern
+            if (boss) {
+                // Boss body with gradient
+                const bossGradient = ctx.createRadialGradient(
+                    boss.x, boss.y, 0,
+                    boss.x, boss.y, boss.radius
+                );
+                bossGradient.addColorStop(0, '#ffffff');
+                bossGradient.addColorStop(0.5, boss.color);
+                bossGradient.addColorStop(1, '#990099');
+                
+                ctx.fillStyle = bossGradient;
+                ctx.beginPath(); 
+                ctx.arc(boss.x, boss.y, boss.radius, 0, Math.PI*2); 
+                ctx.fill();
+                
+                // Boss eye
+                const dx = player.x - boss.x, dy = player.y - boss.y;
+                const eyeDist = Math.min(boss.radius * 0.5, Math.hypot(dx, dy) * 0.3);
+                const eyeAngle = Math.atan2(dy, dx);
+                const eyeX = boss.x + Math.cos(eyeAngle) * eyeDist;
+                const eyeY = boss.y + Math.sin(eyeAngle) * eyeDist;
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath(); 
+                ctx.arc(eyeX, eyeY, boss.radius * 0.2, 0, Math.PI*2); 
+                ctx.fill();
+                
+                ctx.fillStyle = '#000000';
+                ctx.beginPath(); 
+                ctx.arc(eyeX, eyeY, boss.radius * 0.1, 0, Math.PI*2); 
+                ctx.fill();
+                
+                // Boss pattern
+                ctx.strokeStyle = boss.phase === 1 ? '#ff9900' : '#ff0000';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                for(let i = 0; i < 8; i++) {
+                    const angle = (Math.PI * 2 / 8) * i + Date.now() * 0.002;
+                    const spikeX = boss.x + Math.cos(angle) * boss.radius * 1.2;
+                    const spikeY = boss.y + Math.sin(angle) * boss.radius * 1.2;
+                    ctx.moveTo(boss.x, boss.y);
+                    ctx.lineTo(spikeX, spikeY);
+                }
+                ctx.stroke();
+            }
+
+            // Draw Player with enhanced graphics
+            const playerGradient = ctx.createRadialGradient(
+                player.x, player.y, 0,
+                player.x, player.y, player.radius
+            );
+            playerGradient.addColorStop(0, '#ffffff');
+            playerGradient.addColorStop(0.7, player.color);
+            playerGradient.addColorStop(1, '#008888');
+            
+            ctx.fillStyle = playerGradient;
+            ctx.beginPath(); 
+            ctx.arc(player.x, player.y, player.radius, 0, Math.PI*2); 
+            ctx.fill();
+            
+            // Player "legs" / thrusters
+            if (joystickL.moveX !== 0 || joystickL.moveY !== 0) {
+                ctx.fillStyle = `hsl(${player.colorHue}, 100%, 70%)`;
+                for(let i = 0; i < 3; i++) {
+                    const angle = Math.PI + (i - 1) * 0.3 + player.thrusterAngle;
+                    const legX = player.x + Math.cos(angle) * player.radius * 1.5;
+                    const legY = player.y + Math.sin(angle) * player.radius * 1.5;
+                    ctx.beginPath();
+                    ctx.arc(legX, legY, player.radius * 0.4, 0, Math.PI*2);
+                    ctx.fill();
+                }
+            }
+            
+            // Player core
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath(); 
+            ctx.arc(player.x, player.y, player.radius * 0.5, 0, Math.PI*2); 
+            ctx.fill();
+
+            // Draw Bullets with glow
+            bullets.forEach(b => {
+                ctx.shadowColor = b.color;
+                ctx.shadowBlur = 15;
+                ctx.fillStyle = b.color;
+                ctx.fillRect(b.x - 3, b.y - 3, 8, 8);
+                ctx.shadowBlur = 0;
+            });
+
+            // Draw Boss Bullets
+            bossBullets.forEach(bb => { 
+                ctx.shadowColor = bb.color;
+                ctx.shadowBlur = 20;
+                ctx.fillStyle = bb.color;
+                ctx.beginPath(); 
+                ctx.arc(bb.x, bb.y, bb.size || 6, 0, Math.PI*2); 
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            });
+
+            // Draw Enemies with patterns
+            enemies.forEach(en => {
+                const enemyGradient = ctx.createRadialGradient(
+                    en.x, en.y, 0,
+                    en.x, en.y, en.radius
+                );
+                enemyGradient.addColorStop(0, '#ffffff');
+                enemyGradient.addColorStop(0.6, en.color);
+                enemyGradient.addColorStop(1, '#000000');
+                
+                ctx.fillStyle = enemyGradient;
+                ctx.beginPath(); 
+                ctx.arc(en.x, en.y, en.radius, 0, Math.PI*2); 
+                ctx.fill();
+                
+                // Enemy eyes
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath(); 
+                ctx.arc(en.x - en.radius*0.4, en.y - en.radius*0.4, en.radius*0.2, 0, Math.PI*2); 
+                ctx.fill();
+                ctx.beginPath(); 
+                ctx.arc(en.x + en.radius*0.4, en.y - en.radius*0.4, en.radius*0.2, 0, Math.PI*2); 
+                ctx.fill();
+                
+                ctx.fillStyle = '#000000';
+                ctx.beginPath(); 
+                ctx.arc(en.x - en.radius*0.4, en.y - en.radius*0.4, en.radius*0.1, 0, Math.PI*2); 
+                ctx.fill();
+                ctx.beginPath(); 
+                ctx.arc(en.x + en.radius*0.4, en.y - en.radius*0.4, en.radius*0.1, 0, Math.PI*2); 
+                ctx.fill();
+            });
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            if(!gameOver && gameRunning) {
+                requestAnimationFrame(gameLoop);
+            }
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

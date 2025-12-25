@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashavatara - Divine Realm</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f1e 100%);
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Animated background particles */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Lotus opening animation */
+    .lotus-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      pointer-events: none;
+      opacity: 1;
+      transition: opacity 1s ease;
+    }
+
+    .lotus-container.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .lotus {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      animation: lotusFloat 3s ease-in-out;
+    }
+
+    .petal {
+      position: absolute;
+      width: 120px;
+      height: 180px;
+      background: linear-gradient(145deg, #ff6b9d 0%, #ffc371 100%);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      transform-origin: center bottom;
+      box-shadow: 0 4px 20px rgba(255, 107, 157, 0.4);
+      animation: petalOpen 2s ease-out forwards;
+    }
+
+    .petal:nth-child(1) { transform: rotate(0deg) translateY(-50px); animation-delay: 0.1s; }
+    .petal:nth-child(2) { transform: rotate(45deg) translateY(-50px); animation-delay: 0.2s; }
+    .petal:nth-child(3) { transform: rotate(90deg) translateY(-50px); animation-delay: 0.3s; }
+    .petal:nth-child(4) { transform: rotate(135deg) translateY(-50px); animation-delay: 0.4s; }
+    .petal:nth-child(5) { transform: rotate(180deg) translateY(-50px); animation-delay: 0.5s; }
+    .petal:nth-child(6) { transform: rotate(225deg) translateY(-50px); animation-delay: 0.6s; }
+    .petal:nth-child(7) { transform: rotate(270deg) translateY(-50px); animation-delay: 0.7s; }
+    .petal:nth-child(8) { transform: rotate(315deg) translateY(-50px); animation-delay: 0.8s; }
+
+    @keyframes lotusFloat {
+      0% { transform: scale(0) rotate(0deg); opacity: 0; }
+      50% { transform: scale(1.1) rotate(180deg); opacity: 1; }
+      100% { transform: scale(1) rotate(360deg); opacity: 1; }
+    }
+
+    @keyframes petalOpen {
+      0% { transform: rotate(var(--rotation, 0deg)) translateY(-50px) scale(0); }
+      100% { transform: rotate(var(--rotation, 0deg)) translateY(-90px) scale(1); }
+    }
+
+    .lotus-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle, #ffd700 0%, #ff8c00 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+      animation: glowPulse 2s infinite ease-in-out;
+      z-index: 10;
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+      50% { box-shadow: 0 0 50px rgba(255, 215, 0, 1); }
+    }
+
+    /* Main container */
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 40px;
+      min-height: 100vh;
+      opacity: 0;
+      animation: fadeIn 1s ease 2.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* Divine header */
+    .divine-header {
+      text-align: center;
+      margin-bottom: 60px;
+      position: relative;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 3.5rem;
+      background: linear-gradient(135deg, #ffd700 0%, #ff8c00 50%, #ffd700 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+      animation: titleGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes titleGlow {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.3); }
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: #a8dadc;
+      letter-spacing: 2px;
+      font-weight: 300;
+    }
+
+    .om-symbol {
+      font-size: 4rem;
+      margin: 20px 0;
+      animation: omRotate 8s linear infinite;
+      display: inline-block;
+      filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.6));
+    }
+
+    @keyframes omRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Avatar grid */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1400px;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+
+    .avatar-button {
+      position: relative;
+      padding: 30px;
+      font-size: 1.4rem;
+      font-family: 'Cinzel', serif;
+      text-align: center;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      text-decoration: none;
+      color: white;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .avatar-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .avatar-button:hover::before {
+      left: 100%;
+    }
+
+    .avatar-button:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .avatar-button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .avatar-button:hover::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    .avatar-icon {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .avatar-name {
+      position: relative;
+      z-index: 1;
+      font-weight: 600;
+      letter-spacing: 2px;
+    }
+
+    /* Individual avatar colors with gradients */
+    .lord { 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      grid-column: 1 / -1;
+      font-size: 1.6rem;
+      padding: 40px;
+    }
+    
+    .matsya { background: linear-gradient(135deg, #00796b 0%, #004d40 100%); }
+    .kurma { background: linear-gradient(135deg, #5d4037 0%, #3e2723 100%); }
+    .varaha { background: linear-gradient(135deg, #6a1b9a 0%, #4a148c 100%); }
+    .narasimha { background: linear-gradient(135deg, #c62828 0%, #8e0000 100%); }
+    .vamana { background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%); }
+    .parashurama { background: linear-gradient(135deg, #283593 0%, #1a237e 100%); }
+    .rama { background: linear-gradient(135deg, #f57c00 0%, #e65100 100%); }
+    .krishna { background: linear-gradient(135deg, #3949ab 0%, #1e40af 100%); }
+    .buddha { background: linear-gradient(135deg, #8e24aa 0%, #6a1b9a 100%); }
+    .kalki { background: linear-gradient(135deg, #546e7a 0%, #263238 100%); }
+
+    /* Divine footer */
+    .divine-footer {
+      text-align: center;
+      padding: 30px;
+      color: #a8dadc;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      .avatar-grid { grid-template-columns: 1fr; }
+      .lord { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Starry background -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Lotus opening animation -->
+  <div class="lotus-container" id="lotusContainer">
+    <div class="lotus">
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="petal"></div>
+      <div class="lotus-center"></div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="container">
+    <div class="divine-header">
+      <div class="om-symbol">🕉️</div>
+      <h1>दशावतार</h1>
+      <p class="subtitle">The Ten Divine Incarnations of Lord Vishnu</p>
+    </div>
+
+    <div class="avatar-grid">
+      <a href="vaikunt.html" class="avatar-button lord">
+        <span class="avatar-icon">🌍</span>
+        <span class="avatar-name">Enter the Supreme Divine Realm</span>
+      </a>
+
+      <a href="matsya.html" class="avatar-button matsya">
+        <span class="avatar-icon">🐟</span>
+        <span class="avatar-name">Matsya<br><small style="font-size:0.8rem; opacity:0.9;">The Fish</small></span>
+      </a>
+
+      <a href="kurma.html" class="avatar-button kurma">
+        <span class="avatar-icon">🐢</span>
+        <span class="avatar-name">Kurma<br><small style="font-size:0.8rem; opacity:0.9;">The Tortoise</small></span>
+      </a>
+
+      <a href="varaha.html" class="avatar-button varaha">
+        <span class="avatar-icon">🐗</span>
+        <span class="avatar-name">Varaha<br><small style="font-size:0.8rem; opacity:0.9;">The Boar</small></span>
+      </a>
+
+      <a href="narasimha.html" class="avatar-button narasimha">
+        <span class="avatar-icon">🦁</span>
+        <span class="avatar-name">Narasimha<br><small style="font-size:0.8rem; opacity:0.9;">The Lion-Man</small></span>
+      </a>
+
+      <a href="vaman.html" class="avatar-button vamana">
+        <span class="avatar-icon">🧒</span>
+        <span class="avatar-name">Vamana<br><small style="font-size:0.8rem; opacity:0.9;">The Dwarf</small></span>
+      </a>
+
+      <a href="parashurama.html" class="avatar-button parashurama">
+        <span class="avatar-icon">🪓</span>
+        <span class="avatar-name">Parashurama<br><small style="font-size:0.8rem; opacity:0.9;">The Warrior Sage</small></span>
+      </a>
+
+      <a href="ram.html" class="avatar-button rama">
+        <span class="avatar-icon">🏹</span>
+        <span class="avatar-name">Rama<br><small style="font-size:0.8rem; opacity:0.9;">The Prince</small></span>
+      </a>
+
+      <a href="krishna.html" class="avatar-button krishna">
+        <span class="avatar-icon">🎶</span>
+        <span class="avatar-name">Krishna<br><small style="font-size:0.8rem; opacity:0.9;">The Divine Cowherd</small></span>
+      </a>
+
+      <a href="buddha.html" class="avatar-button buddha">
+        <span class="avatar-icon">🧘</span>
+        <span class="avatar-name">Buddha<br><small style="font-size:0.8rem; opacity:0.9;">The Enlightened One</small></span>
+      </a>
+
+      <a href="kalki.html" class="avatar-button kalki">
+        <span class="avatar-icon">⚔️</span>
+        <span class="avatar-name">Kalki<br><small style="font-size:0.8rem; opacity:0.9;">The Future Warrior</small></span>
+      </a>
+    </div>
+
+    <div class="divine-footer">
+      <p>ॐ नमो नारायणाय</p>
+      <p style="font-size:0.9rem; margin-top:10px; opacity:0.8;">Om Namo Narayanaya</p>
+    </div>
+  </div>
+
+  <script>
+    // Create starry background
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.width = Math.random() * 3 + 'px';
+      star.style.height = star.style.width;
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      starsContainer.appendChild(star);
+    }
+
+    // Hide lotus after animation
+    setTimeout(() => {
+      document.getElementById('lotusContainer').classList.add('hidden');
+    }, 2500);
+
+    // Add dynamic rotation to each petal
+    document.querySelectorAll('.petal').forEach((petal, index) => {
+      const rotation = index * 45;
+      petal.style.setProperty('--rotation', `${rotation}deg`);
+    });
+
+    // Add hover sound effect simulation (visual feedback)
+    document.querySelectorAll('.avatar-button').forEach(button => {
+      button.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-10px) scale(1.05) rotateX(5deg)';
+      });
+      button.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1) rotateX(0deg)';
+      });
+    });
+  </script>
+
+</body>
+</html>

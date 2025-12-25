@@ -4,132 +4,468 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Divine Realm - Narasimha</title>
-
   <style>
-    /* Background video styling */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Georgia', serif;
+    }
+
+    /* Background video with divine overlay */
     #bgVideo {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%; /* Make sure it stretches to full width */
-      height: 100vh; /* Viewport height for mobile and desktop */
-      object-fit: cover; /* Ensures the video covers the screen */
-      z-index: -1;
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+      filter: brightness(0.7);
     }
 
-    html, body {
-      margin: 0;
-      padding: 0;
+    /* Divine gradient overlay */
+    .divine-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
       height: 100%;
-      overflow: hidden;
+      background: radial-gradient(circle at center, transparent 0%, rgba(255, 140, 0, 0.2) 50%, rgba(139, 0, 0, 0.3) 100%);
+      z-index: -1;
+      animation: pulseOverlay 4s ease-in-out infinite;
     }
 
-    /* Bell button container */
+    @keyframes pulseOverlay {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 0.9; }
+    }
+
+    /* Roaring animation container */
+    .roar-animation {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      height: 300px;
+      z-index: 5;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .roar-animation.active {
+      animation: roarBurst 2s ease-out forwards;
+    }
+
+    @keyframes roarBurst {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+      20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+      50% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(1.5) rotate(10deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(2.5) rotate(20deg);
+      }
+    }
+
+    .roar-text {
+      font-size: 80px;
+      font-weight: bold;
+      color: #ff4500;
+      text-shadow: 0 0 20px rgba(255, 69, 0, 0.8),
+                   0 0 40px rgba(255, 140, 0, 0.6),
+                   0 0 60px rgba(255, 215, 0, 0.4);
+      animation: textShake 0.5s ease-in-out infinite;
+    }
+
+    @keyframes textShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px) rotate(-2deg); }
+      75% { transform: translateX(5px) rotate(2deg); }
+    }
+
+    /* Energy waves */
+    .energy-wave {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 100px;
+      height: 100px;
+      border: 3px solid rgba(255, 215, 0, 0.6);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      z-index: 4;
+    }
+
+    .energy-wave.active {
+      animation: waveExpand 1.5s ease-out forwards;
+    }
+
+    @keyframes waveExpand {
+      0% {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(6);
+      }
+    }
+
+    /* Floating particles */
+    .particle {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: gold;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 3;
+      animation: float 3s ease-in-out infinite;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(20px);
+        opacity: 0;
+      }
+    }
+
+    /* Button styles */
+    .open-slideshow {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      z-index: 10;
+      padding: 15px 30px;
+      font-size: 18px;
+      background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+      color: white;
+      border: 2px solid gold;
+      border-radius: 15px;
+      text-decoration: none;
+      box-shadow: 0 5px 25px rgba(255, 107, 53, 0.5);
+      transition: all 0.3s ease;
+      font-weight: bold;
+      backdrop-filter: blur(10px);
+    }
+
+    .open-slideshow:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 35px rgba(255, 107, 53, 0.7);
+      background: linear-gradient(135deg, #f7931e 0%, #ff6b35 100%);
+    }
+
     #shankhButtonContainer {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 30px;
+      right: 30px;
       z-index: 10;
     }
 
     #shankhButton {
-      padding: 12px 20px;
-      font-size: 16px;
-      background-color: gold;
-      border: none;
-      border-radius: 8px;
+      padding: 15px 30px;
+      font-size: 18px;
+      background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+      border: 2px solid #ff8c00;
+      border-radius: 50px;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
-      transition: background-color 0.3s ease;
+      box-shadow: 0 5px 25px rgba(255, 215, 0, 0.6);
+      transition: all 0.3s ease;
+      font-weight: bold;
+      color: #8b4513;
     }
 
     #shankhButton:hover {
-      background-color: orange;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 35px rgba(255, 215, 0, 0.9);
     }
 
-    /* Slideshow button */
-    .open-slideshow {
+    #shankhButton:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    /* Audio controls */
+    .audio-controls {
       position: fixed;
-      top: 20px;
-      left: 20px;
+      top: 30px;
+      right: 30px;
       z-index: 10;
-      padding: 12px 20px;
-      font-size: 16px;
-      background-color: #4caf50;
-      color: white;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px 20px;
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .audio-btn {
+      background: none;
       border: none;
-      border-radius: 10px;
-      text-decoration: none;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      transition: background-color 0.3s ease;
+      color: gold;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 5px;
     }
 
-    .open-slideshow:hover {
-      background-color: #388e3c;
+    .audio-btn:hover {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 10px gold);
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 600px) {
-      #shankhButton, .open-slideshow {
+    .volume-slider {
+      width: 80px;
+      height: 4px;
+      background: rgba(255, 215, 0, 0.3);
+      border-radius: 2px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: gold;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    /* Divine title */
+    .divine-title {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 72px;
+      color: gold;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
+                   0 0 40px rgba(255, 140, 0, 0.6),
+                   0 0 60px rgba(255, 69, 0, 0.4);
+      z-index: 2;
+      animation: titleGlow 3s ease-in-out infinite;
+      font-family: 'Georgia', serif;
+      font-weight: bold;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    @keyframes titleGlow {
+      0%, 100% {
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
+                     0 0 40px rgba(255, 140, 0, 0.6),
+                     0 0 60px rgba(255, 69, 0, 0.4);
+      }
+      50% {
+        text-shadow: 0 0 30px rgba(255, 215, 0, 1),
+                     0 0 60px rgba(255, 140, 0, 0.8),
+                     0 0 90px rgba(255, 69, 0, 0.6);
+      }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .divine-title {
+        font-size: 48px;
+      }
+      
+      .open-slideshow, #shankhButton {
         font-size: 14px;
-        padding: 10px 16px;
+        padding: 12px 20px;
       }
 
-      #shankhButtonContainer {
-        bottom: 15px;
+      .audio-controls {
+        top: 100px;
         right: 15px;
+        padding: 8px 15px;
+      }
+
+      .roar-text {
+        font-size: 60px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .divine-title {
+        font-size: 36px;
       }
 
       .open-slideshow {
         top: 15px;
         left: 15px;
       }
+
+      #shankhButtonContainer {
+        bottom: 15px;
+        right: 15px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Slideshow Button -->
-  <a href="htmls/narasimha story.html" class="open-slideshow">🦁 View Narasimha's Story</a>
+  <!-- Divine overlay -->
+  <div class="divine-overlay"></div>
 
   <!-- Background Video -->
   <video id="bgVideo" autoplay muted loop playsinline>
-    <source src="video\lord narashima.mp4" type="video/mp4" />
+    <source src="video/lord narashima.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 
-  <!-- Final Mantra Audio -->
-  <audio id="finalAudio" loop>
-    <source src="audio\Roar Of Narsimha.mp3" type="audio/mp3" />
-    Your browser does not support the audio tag.
-  </audio>
+  <!-- Divine Title -->
+  <div class="divine-title">🦁 श्री नरसिंह 🦁</div>
 
-  <!-- Shankh Audio -->
-  <audio id="shankhAudio">
-    <source src="audio\bell.mp3" type="audio/mp3" />
-    Your browser does not support the audio tag.
-  </audio>
+  <!-- Roaring Animation -->
+  <div class="roar-animation" id="roarAnimation">
+    <div class="roar-text">ROAR!</div>
+  </div>
+
+  <!-- Energy Waves -->
+  <div class="energy-wave" id="wave1"></div>
+  <div class="energy-wave" id="wave2"></div>
+  <div class="energy-wave" id="wave3"></div>
+
+  <!-- Slideshow Button -->
+  <a href="narasimha story.html" class="open-slideshow">🦁 View Narasimha's Story</a>
+
+  <!-- Audio Controls -->
+  <div class="audio-controls">
+    <button class="audio-btn" id="playPauseBtn">▶️</button>
+    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="50">
+    <span class="audio-btn">🔊</span>
+  </div>
 
   <!-- Bell Button -->
   <div id="shankhButtonContainer">
     <button id="shankhButton">🔔 Ring Bell</button>
   </div>
 
+  <!-- Audio Elements -->
+  <!-- CHANGE AUDIO SOURCE HERE -->
+  <audio id="finalAudio" loop>
+    <source src="audio/Roar Of Narsimha.mp3" type="audio/mp3" />
+    Your browser does not support the audio tag.
+  </audio>
+
+  <audio id="shankhAudio">
+    <source src="audio/bell.mp3" type="audio/mp3" />
+    Your browser does not support the audio tag.
+  </audio>
+
   <!-- Script -->
   <script>
     const finalAudio = document.getElementById("finalAudio");
     const shankhAudio = document.getElementById("shankhAudio");
     const shankhButton = document.getElementById("shankhButton");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const volumeSlider = document.getElementById("volumeSlider");
+    const roarAnimation = document.getElementById("roarAnimation");
+    const waves = [document.getElementById("wave1"), document.getElementById("wave2"), document.getElementById("wave3")];
 
-    // Start mantra audio after first user interaction
+    let isPlaying = false;
+
+    // Set initial volume
+    finalAudio.volume = 0.5;
+    shankhAudio.volume = 0.7;
+
+    // Create floating particles
+    function createParticles() {
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 3 + 's';
+        particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        document.body.appendChild(particle);
+      }
+    }
+    createParticles();
+
+    // Play/Pause functionality
+    playPauseBtn.addEventListener("click", () => {
+      if (isPlaying) {
+        finalAudio.pause();
+        playPauseBtn.textContent = "▶️";
+      } else {
+        finalAudio.play().catch(err => console.log("Playback error:", err));
+        playPauseBtn.textContent = "⏸️";
+      }
+      isPlaying = !isPlaying;
+    });
+
+    // Volume control
+    volumeSlider.addEventListener("input", (e) => {
+      finalAudio.volume = e.target.value / 100;
+    });
+
+    // Auto-play after user interaction
     document.body.addEventListener("click", () => {
-      finalAudio.play().catch(err => console.log("Autoplay blocked:", err));
+      if (!isPlaying) {
+        finalAudio.play().then(() => {
+          isPlaying = true;
+          playPauseBtn.textContent = "⏸️";
+        }).catch(err => console.log("Autoplay blocked:", err));
+      }
     }, { once: true });
 
-    // Play Shankh sound on button click
-    shankhButton.addEventListener("click", () => {
+    // Roaring animation on bell click
+    function triggerRoar() {
+      // Trigger roar animation
+      roarAnimation.classList.add('active');
+      
+      // Trigger waves with delays
+      waves.forEach((wave, index) => {
+        setTimeout(() => {
+          wave.classList.add('active');
+        }, index * 200);
+      });
+
+      // Reset animations
+      setTimeout(() => {
+        roarAnimation.classList.remove('active');
+        waves.forEach(wave => wave.classList.remove('active'));
+      }, 2000);
+
+      // Play bell sound
+      shankhAudio.currentTime = 0;
       shankhAudio.play();
-    });
+    }
+
+    // Bell button click
+    shankhButton.addEventListener("click", triggerRoar);
+
+    // Periodic automatic roar (every 15 seconds)
+    setInterval(triggerRoar, 15000);
   </script>
 
 </body>

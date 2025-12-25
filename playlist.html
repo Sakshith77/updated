@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimedia Player</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .mode-btn {
+            padding: 12px 30px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .mode-btn:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .mode-btn.active {
+            background: white;
+            color: #667eea;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .player-section {
+            display: none;
+        }
+
+        .player-section.active {
+            display: block;
+        }
+
+        /* Audio Sections */
+        .audio-category {
+            margin-bottom: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .romantic .category-header {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+            color: white;
+        }
+
+        .motivational .category-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .devotional .category-header {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+        }
+
+        .category-icon {
+            font-size: 2em;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .category-header h3 {
+            font-size: 1.5em;
+        }
+
+        .playlist {
+            background: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .playlist.open {
+            max-height: 500px;
+        }
+
+        .track {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .track:hover {
+            background: #f8f9fa;
+            padding-left: 30px;
+        }
+
+        .track.playing {
+            background: linear-gradient(90deg, #667eea20 0%, #764ba220 100%);
+            font-weight: 600;
+        }
+
+        .track-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+        }
+
+        /* Audio Visualizer */
+        .visualizer {
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 4px;
+            height: 60px;
+            margin: 20px 0;
+        }
+
+        .visualizer.active {
+            display: flex;
+        }
+
+        .bar {
+            width: 8px;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            border-radius: 4px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .bar:nth-child(1) { animation-delay: 0s; }
+        .bar:nth-child(2) { animation-delay: 0.1s; }
+        .bar:nth-child(3) { animation-delay: 0.2s; }
+        .bar:nth-child(4) { animation-delay: 0.3s; }
+        .bar:nth-child(5) { animation-delay: 0.4s; }
+        .bar:nth-child(6) { animation-delay: 0.3s; }
+        .bar:nth-child(7) { animation-delay: 0.2s; }
+        .bar:nth-child(8) { animation-delay: 0.1s; }
+
+        @keyframes wave {
+            0%, 100% { height: 20px; }
+            50% { height: 60px; }
+        }
+
+        /* Player Controls */
+        .player-controls {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .now-playing {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .now-playing h4 {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.3);
+            height: 8px;
+            border-radius: 10px;
+            margin: 15px 0;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            background: white;
+            color: #667eea;
+            transform: scale(1.1);
+        }
+
+        .control-btn.play-pause {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5em;
+        }
+
+        /* Video Section */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3em;
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-info h4 {
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .video-player-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .video-player-container.active {
+            display: block;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #764ba2;
+            transform: translateX(-5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Multimedia Player 🎬</h1>
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="switchMode('audio')">🎵 Audio Playlist</button>
+                <button class="mode-btn" onclick="switchMode('video')">🎬 Video Playlist</button>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Audio Player Section -->
+            <div id="audioSection" class="player-section active">
+                <!-- Romantic Music -->
+                <div class="audio-category romantic">
+                    <div class="category-header" onclick="togglePlaylist(this)">
+                        <span class="category-icon">💖</span>
+                        <h3>Romantic Music</h3>
+                    </div>
+                    <div class="playlist">
+                        <div class="track" onclick="playSong('romantic', 0)">
+                            <span class="track-number">1</span>
+                            <span>Romantic Song 1</span>
+                        </div>
+                        <div class="track" onclick="playSong('romantic', 1)">
+                            <span class="track-number">2</span>
+                            <span>Romantic Song 2</span>
+                        </div>
+                        <div class="track" onclick="playSong('romantic', 2)">
+                            <span class="track-number">3</span>
+                            <span>Romantic Song 3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Motivational Music -->
+                <div class="audio-category motivational">
+                    <div class="category-header" onclick="togglePlaylist(this)">
+                        <span class="category-icon">💪</span>
+                        <h3>Motivational Music</h3>
+                    </div>
+                    <div class="playlist">
+                        <div class="track" onclick="playSong('motivational', 0)">
+                            <span class="track-number">1</span>
+                            <span>Motivational Song 1</span>
+                        </div>
+                        <div class="track" onclick="playSong('motivational', 1)">
+                            <span class="track-number">2</span>
+                            <span>Motivational Song 2</span>
+                        </div>
+                        <div class="track" onclick="playSong('motivational', 2)">
+                            <span class="track-number">3</span>
+                            <span>Motivational Song 3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Devotional Music -->
+                <div class="audio-category devotional">
+                    <div class="category-header" onclick="togglePlaylist(this)">
+                        <span class="category-icon">🙏</span>
+                        <h3>Devotional Music</h3>
+                    </div>
+                    <div class="playlist">
+                        <div class="track" onclick="playSong('devotional', 0)">
+                            <span class="track-number">1</span>
+                            <span>Devotional Song 1</span>
+                        </div>
+                        <div class="track" onclick="playSong('devotional', 1)">
+                            <span class="track-number">2</span>
+                            <span>Devotional Song 2</span>
+                        </div>
+                        <div class="track" onclick="playSong('devotional', 2)">
+                            <span class="track-number">3</span>
+                            <span>Devotional Song 3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audio Visualizer -->
+                <div class="visualizer" id="visualizer">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+
+                <!-- Player Controls -->
+                <div class="player-controls">
+                    <div class="now-playing">
+                        <h4 id="currentTrack">Select a song to play</h4>
+                        <p id="currentCategory"></p>
+                    </div>
+                    <div class="progress-container" onclick="seek(event)">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
+                    <div class="time-display">
+                        <span id="currentTime">0:00</span>
+                        <span id="duration">0:00</span>
+                    </div>
+                    <div class="controls">
+                        <button class="control-btn" onclick="previousTrack()">⏮</button>
+                        <button class="control-btn play-pause" onclick="togglePlay()" id="playPauseBtn">▶</button>
+                        <button class="control-btn" onclick="nextTrack()">⏭</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Player Section -->
+            <div id="videoSection" class="player-section">
+                <div class="video-grid" id="videoGrid">
+                    <div class="video-card" onclick="playVideo(0)">
+                        <div class="video-thumbnail">▶</div>
+                        <div class="video-info">
+                            <h4>Tera-Chehra</h4>
+                            <p>Amazing song</p>
+                        </div>
+                    </div>
+                    <div class="video-card" onclick="playVideo(1)">
+                        <div class="video-thumbnail">▶</div>
+                        <div class="video-info">
+                            <h4>Video 2</h4>
+                            <p>Incredible footage</p>
+                        </div>
+                    </div>
+                    <div class="video-card" onclick="playVideo(2)">
+                        <div class="video-thumbnail">▶</div>
+                        <div class="video-info">
+                            <h4>Video 3</h4>
+                            <p>Must watch content</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-player-container" id="videoPlayerContainer">
+                    <button class="back-btn" onclick="closeVideo()">← Back to Grid</button>
+                    <video id="videoPlayer" controls></video>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer"></audio>
+
+    <script>
+        // ========== AUDIO FILES - INSERT YOUR .MP3 FILES HERE ==========
+        const audioFiles = {
+            romantic: [
+                'path/to/romantic-song-1.mp3',  // Replace with your file path
+                'path/to/romantic-song-2.mp3',
+                'path/to/romantic-song-3.mp3'
+            ],
+            motivational: [
+                'path/to/motivational-song-1.mp3',  // Replace with your file path
+                'path/to/motivational-song-2.mp3',
+                'path/to/motivational-song-3.mp3'
+            ],
+            devotional: [
+                'htmls/audio/Krishna Trance.mp3',  // Replace with your file path
+                'htmls/audio/mantra.mp3',
+                'path/to/devotional-song-3.mp3'
+            ]
+        };
+
+        // ========== VIDEO FILES - INSERT YOUR .MP4 FILES HERE ==========
+        const videoFiles = [
+            'htmls/video/Tera chehra.mp4',  // Replace with your file path
+            'htmls/video/badal.mp4',
+            'path/to/video-3.mp4'
+        ];
+
+        // Audio Player State
+        const audioPlayer = document.getElementById('audioPlayer');
+        const visualizer = document.getElementById('visualizer');
+        let currentCategory = '';
+        let currentTrackIndex = -1;
+        let isPlaying = false;
+
+        // Video Player State
+        const videoPlayer = document.getElementById('videoPlayer');
+
+        // Switch between Audio and Video mode
+        function switchMode(mode) {
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.player-section').forEach(section => section.classList.remove('active'));
+            
+            if (mode === 'audio') {
+                document.getElementById('audioSection').classList.add('active');
+                videoPlayer.pause();
+            } else {
+                document.getElementById('videoSection').classList.add('active');
+                audioPlayer.pause();
+                visualizer.classList.remove('active');
+                isPlaying = false;
+                updatePlayPauseButton();
+            }
+        }
+
+        // Toggle playlist visibility
+        function togglePlaylist(header) {
+            const playlist = header.nextElementSibling;
+            playlist.classList.toggle('open');
+        }
+
+        // Play selected song
+        function playSong(category, index) {
+            currentCategory = category;
+            currentTrackIndex = index;
+            
+            // Remove playing class from all tracks
+            document.querySelectorAll('.track').forEach(track => track.classList.remove('playing'));
+            
+            // Add playing class to current track
+            event.target.classList.add('playing');
+            
+            // Update audio source
+            audioPlayer.src = audioFiles[category][index];
+            audioPlayer.play();
+            isPlaying = true;
+            
+            // Update UI
+            const trackName = event.target.textContent;
+            document.getElementById('currentTrack').textContent = trackName;
+            document.getElementById('currentCategory').textContent = category.charAt(0).toUpperCase() + category.slice(1);
+            updatePlayPauseButton();
+            visualizer.classList.add('active');
+        }
+
+        // Toggle play/pause
+        function togglePlay() {
+            if (audioPlayer.src) {
+                if (isPlaying) {
+                    audioPlayer.pause();
+                    isPlaying = false;
+                    visualizer.classList.remove('active');
+                } else {
+                    audioPlayer.play();
+                    isPlaying = true;
+                    visualizer.classList.add('active');
+                }
+                updatePlayPauseButton();
+            }
+        }
+
+        // Update play/pause button
+        function updatePlayPauseButton() {
+            document.getElementById('playPauseBtn').textContent = isPlaying ? '⏸' : '▶';
+        }
+
+        // Previous track
+        function previousTrack() {
+            if (currentCategory && currentTrackIndex > 0) {
+                currentTrackIndex--;
+                const tracks = document.querySelectorAll(`.${currentCategory} .track`);
+                tracks[currentTrackIndex].click();
+            }
+        }
+
+        // Next track
+        function nextTrack() {
+            if (currentCategory) {
+                const maxIndex = audioFiles[currentCategory].length - 1;
+                if (currentTrackIndex < maxIndex) {
+                    currentTrackIndex++;
+                    const tracks = document.querySelectorAll(`.${currentCategory} .track`);
+                    tracks[currentTrackIndex].click();
+                }
+            }
+        }
+
+        // Seek functionality
+        function seek(e) {
+            const progressContainer = e.currentTarget;
+            const clickX = e.offsetX;
+            const width = progressContainer.offsetWidth;
+            const duration = audioPlayer.duration;
+            audioPlayer.currentTime = (clickX / width) * duration;
+        }
+
+        // Update progress bar
+        audioPlayer.addEventListener('timeupdate', () => {
+            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('currentTime').textContent = formatTime(audioPlayer.currentTime);
+            document.getElementById('duration').textContent = formatTime(audioPlayer.duration);
+        });
+
+        // Auto-play next track when current ends
+        audioPlayer.addEventListener('ended', () => {
+            nextTrack();
+        });
+
+        // Format time
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Play video
+        function playVideo(index) {
+            document.getElementById('videoGrid').style.display = 'none';
+            document.getElementById('videoPlayerContainer').classList.add('active');
+            videoPlayer.src = videoFiles[index];
+            videoPlayer.play();
+        }
+
+        // Close video player
+        function closeVideo() {
+            document.getElementById('videoGrid').style.display = 'grid';
+            document.getElementById('videoPlayerContainer').classList.remove('active');
+            videoPlayer.pause();
+            videoPlayer.src = '';
+        }
+
+        // Auto-play next video when current ends
+        videoPlayer.addEventListener('ended', () => {
+            const currentIndex = videoFiles.indexOf(videoPlayer.src.split('/').pop());
+            if (currentIndex < videoFiles.length - 1) {
+                playVideo(currentIndex + 1);
+            }
+        });
+    </script>
+</body>
+</html>
